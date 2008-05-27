@@ -1,9 +1,5 @@
-#!/opt/local/bin/ruby -w
-
-##
-# Originally by Mike Clark.
-#
-# From http://www.pragmaticautomation.com/cgi-bin/pragauto.cgi/Monitor/StakingOutFileChanges.rdoc
+#!/usr/bin/env ruby -w
+# == Synopsis
 #
 # Runs a user-defined command when files are modified.
 #
@@ -14,17 +10,43 @@
 #
 # Can use Ruby's Dir[] to get file glob. Quote your args to take advantage of this.
 #
+# == Usage
+# 
+#   rstakeout command file [...]
+#
+# command::
+#   command to run when files change
+#
+# file::
+#   file or file glob to watch
+#
+# == Examples
+#
 #  rstakeout 'rake test:recent' **/*.rb
 #  => Only watches Ruby files one directory down (no quotes)
 #
 #  rstakeout 'rake test:recent' '**/*.rb'
 #  => Watches all Ruby files in all directories and subdirectories
 #
+# == Authors
+#
+# Originally by Mike Clark.
+# From http://www.pragmaticautomation.com/cgi-bin/pragauto.cgi/Monitor/StakingOutFileChanges.rdoc
+#
 # Modified (with permission) by Geoffrey Grosenbach to call growlnotify for
 # rspec and Test::Unit output.
 #
+# == See also
+#
 # See the PeepCode screencast on rSpec or other blog articles for instructions on
 # setting up growlnotify.
+
+require 'optparse'
+require 'rdoc/usage'
+
+opts = OptionParser.new
+opts.on("-h", "--help") { RDoc::usage('Usage') }
+opts.parse(ARGV) rescue RDoc::usage('Usage')
 
 def growl(title, msg, img, pri=0, sticky="")
   system "growlnotify -n autotest --image ~/.autotest_images/#{img} -p #{pri} -m #{msg.inspect} #{title} #{sticky}"
