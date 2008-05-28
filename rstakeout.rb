@@ -36,6 +36,9 @@
 # Modified (with permission) by Geoffrey Grosenbach to call growlnotify for
 # rspec and Test::Unit output.
 #
+# Modified (without permission, but with much rrrrespect) by Matthew Fallshaw,
+# just to, you know, touch it, and get to know it, and make it spit a usage string.
+#
 # == See also
 #
 # See the PeepCode screencast on rSpec or other blog articles for instructions on
