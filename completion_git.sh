@@ -665,6 +665,9 @@ _git_fetch ()
 	git,2)
 		__gitcomp "$(__git_remotes)"
 		;;
+	g,2)
+		__gitcomp "$(__git_remotes)"
+		;;
 	*)
 		case "$cur" in
 		*:*)
@@ -808,6 +811,9 @@ _git_pull ()
 	git,2)
 		__gitcomp "$(__git_remotes)"
 		;;
+	g,2)
+		__gitcomp "$(__git_remotes)"
+		;;
 	*)
 		local remote
 		case "${COMP_WORDS[0]}" in
@@ -828,6 +834,9 @@ _git_push ()
 		__gitcomp "$(__git_remotes)"
 		;;
 	git,2)
+		__gitcomp "$(__git_remotes)"
+		;;
+	g,2)
 		__gitcomp "$(__git_remotes)"
 		;;
 	*)
@@ -1360,17 +1369,17 @@ _gitk ()
 	__git_complete_revlist
 }
 
-complete -o default -o nospace -F _git git
+complete -o default -o nospace -F _git git g
 complete -o default -o nospace -F _gitk gitk
 complete -o default -o nospace -F _git_am git-am
 complete -o default -o nospace -F _git_apply git-apply
 complete -o default -o nospace -F _git_bisect git-bisect
-complete -o default -o nospace -F _git_branch git-branch
+complete -o default -o nospace -F _git_branch git-branch gb
 complete -o default -o nospace -F _git_bundle git-bundle
 complete -o default -o nospace -F _git_checkout git-checkout
 complete -o default -o nospace -F _git_cherry git-cherry
 complete -o default -o nospace -F _git_cherry_pick git-cherry-pick
-complete -o default -o nospace -F _git_commit git-commit
+complete -o default -o nospace -F _git_commit git-commit gc
 complete -o default -o nospace -F _git_describe git-describe
 complete -o default -o nospace -F _git_diff git-diff
 complete -o default -o nospace -F _git_fetch git-fetch
@@ -1382,8 +1391,8 @@ complete -o default -o nospace -F _git_ls_tree git-ls-tree
 complete -o default -o nospace -F _git_merge git-merge
 complete -o default -o nospace -F _git_merge_base git-merge-base
 complete -o default -o nospace -F _git_name_rev git-name-rev
-complete -o default -o nospace -F _git_pull git-pull
-complete -o default -o nospace -F _git_push git-push
+complete -o default -o nospace -F _git_pull git-pull gl
+complete -o default -o nospace -F _git_push git-push gp
 complete -o default -o nospace -F _git_rebase git-rebase
 complete -o default -o nospace -F _git_config git-config
 complete -o default -o nospace -F _git_remote git-remote
