@@ -1379,9 +1379,9 @@ complete -o default -o nospace -F _git_bundle git-bundle
 complete -o default -o nospace -F _git_checkout git-checkout
 complete -o default -o nospace -F _git_cherry git-cherry
 complete -o default -o nospace -F _git_cherry_pick git-cherry-pick
-complete -o default -o nospace -F _git_commit git-commit gc
+complete -o default -o nospace -F _git_commit git-commit gc gca
 complete -o default -o nospace -F _git_describe git-describe
-complete -o default -o nospace -F _git_diff git-diff
+complete -o default -o nospace -F _git_diff git-diff gd
 complete -o default -o nospace -F _git_fetch git-fetch
 complete -o default -o nospace -F _git_format_patch git-format-patch
 complete -o default -o nospace -F _git_gc git-gc
