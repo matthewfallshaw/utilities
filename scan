@@ -1,0 +1,2 @@
+#!/bin/sh
+xsane net:scanner:hpaio:/usb/psc_2300_series?serial=MY3A7C46TB6C &
