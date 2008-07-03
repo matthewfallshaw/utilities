@@ -1,0 +1,12 @@
+#!/bin/bash
+if [ -z $1 ]; then
+  project=`basename \`pwd\``
+else
+  project=$1
+fi
+ssh git.trike.com.au "cd ~git/projectfiles; umask 2; mkdir $project.git; cd $project.git; git --bare init"
+git remote add origin git@git.trike.com.au:projectfiles/$project.git
+git push origin master
+echo
+echo "Project pushed to:"
+git remote show origin
