@@ -60,7 +60,7 @@ def self.growl_fail(output)
 end
 
 def self.growl_pass(output)
-  growl "Pass", "#{output}", "pass.png"
+  # growl "Pass", "#{output}", "pass.png"
 end
 
 command = ARGV.shift
