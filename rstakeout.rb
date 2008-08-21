@@ -37,7 +37,8 @@
 # rspec and Test::Unit output.
 #
 # Modified (without permission, but with much rrrrespect) by Matthew Fallshaw,
-# just to, you know, touch it, and get to know it, and make it spit a usage string.
+# just to, you know, touch it, and get to know it, make it spit a usage string,
+# and make it do that cool autotest run when poked thing.
 #
 # == See also
 #
@@ -60,9 +61,10 @@ class Peeper
   end
 
   def initialize(command, list_of_targets)
-    @command, @targets = nil, {}
     self.command = command
+    @targets = {}
     self.targets = list_of_targets
+    self.interrupted = true
   end
 
   attr_accessor :command
