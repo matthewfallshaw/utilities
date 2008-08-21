@@ -44,56 +44,95 @@
 # See the PeepCode screencast on rSpec or other blog articles for instructions on
 # setting up growlnotify.
 
-require 'optparse'
-require 'rdoc/usage'
+class Peeper
 
-opts = OptionParser.new
-opts.on("-h", "--help") { RDoc::usage('Usage') }
-opts.parse(ARGV) rescue RDoc::usage('Usage')
+  def growl(title, msg, img, pri=0, sticky="")
+    system "growlnotify -n autotest --image ~/.autotest_images/#{img} -p #{pri} -m #{msg.inspect} #{title} #{sticky}"
+  end
 
-def growl(title, msg, img, pri=0, sticky="")
-  system "growlnotify -n autotest --image ~/.autotest_images/#{img} -p #{pri} -m #{msg.inspect} #{title} #{sticky}"
-end
+  def growl_fail(output)
+    growl "FAIL", "#{output}", "fail.png", 2
+  end
 
-def self.growl_fail(output)
-  growl "FAIL", "#{output}", "fail.png", 2
-end
+  def growl_pass(output)
+    # You don't want to be interrupted by a pass. These aren't the droids you're looking for.
+    # growl "Pass", "#{output}", "pass.png"
+  end
 
-def self.growl_pass(output)
-  # growl "Pass", "#{output}", "pass.png"
-end
+  def initialize(command, list_of_targets)
+    @command, @targets = nil, {}
+    self.command = command
+    self.targets = list_of_targets
+  end
 
-command = ARGV.shift
-files = {}
+  attr_accessor :command
 
-ARGV.each do |arg|
-  Dir[arg].each { |file|
-    files[file] = File.mtime(file)
-  }
-end
+  attr_reader :targets
+  def targets=(list)
+    if list.is_a?(Hash)
+      @targets = list
+    elsif list.is_a?(Array)
+      list.each do |item|
+        Dir[item].each { |file|
+          @targets[file] = File.mtime(file)
+        }
+      end
+    else
+      raise ArgumentError, "Expecting an Array or a Hash"
+    end
+  end
 
-puts "Watching #{files.keys.join(', ')}\n\nFiles: #{files.keys.length}"
+  def watch
+    puts "Watching #{targets.keys.join(', ')}\n\nFiles: #{targets.keys.length}"
 
-trap('INT') do
-  puts "\nQuitting..."
-  exit
-end
+    add_sigint_handler
 
+    loop do
+      sleep 1
 
-loop do
+      changed_file, last_changed = targets.find do |file, last_changed|
+        File.mtime(file) > last_changed
+      end
 
-  sleep 1
+      if changed_file || interrupted
+        self.interrupted = false
+        results = run_command(changed_file || :interrupted)
+        whine(results)
+        puts "=> done"
+      end
+    end
 
-  changed_file, last_changed = files.find { |file, last_changed|
-    File.mtime(file) > last_changed
-  }
+    puts "\nQuitting..."
+  end
 
-  if changed_file
-    files[changed_file] = File.mtime(changed_file)
-    puts "=> #{changed_file} changed, running #{command}"
+  attr_accessor :interrupted
+  def add_sigint_handler
+    trap('INT') do
+      if interrupted then
+        puts "\nQuitting..."
+        exit
+      else
+        puts "Interrupt a second time to quit"
+        self.interrupted = true
+        Kernel.sleep 1.5
+      end
+
+    end
+  end
+
+  def run_command(changed_file)
+    if changed_file == :interrupted
+      puts "=> you poked me, running #{command}"
+    else
+      targets[changed_file] = File.mtime(changed_file)
+      puts "=> #{changed_file} changed, running #{command}"
+    end
     results = `#{command}`
     puts results
+    results
+  end
 
+  def whine(results)
     if results.include? 'tests'
       output = results.slice(/(\d+)\s+tests?,\s*(\d+)\s+assertions?,\s*(\d+)\s+failures?(,\s*(\d+)\s+errors)?/)
       if output
@@ -106,8 +145,15 @@ loop do
       end
     end
     # TODO Generic growl notification for other actions
-
-    puts "=> done"
   end
-
 end
+
+require 'optparse'
+require 'rdoc/usage'
+
+opts = OptionParser.new
+opts.on("-h", "--help") { RDoc::usage('Usage') }
+opts.parse(ARGV) rescue RDoc::usage('Usage')
+
+peeper = Peeper.new(ARGV.first, ARGV[1..-1])
+peeper.watch
