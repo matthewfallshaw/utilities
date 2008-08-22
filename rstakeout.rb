@@ -12,21 +12,15 @@
 #
 # == Usage
 # 
-#   rstakeout command file [...]
-#
-# command::
-#   command to run when files change
-#
-# file::
-#   file or file glob to watch
+#   rstakeout -h
 #
 # == Examples
 #
 #  rstakeout 'rake test:recent' **/*.rb
-#  => Only watches Ruby files one directory down (no quotes)
+#  => Only watches Ruby files one directory down (no quotes thus shell expansion)
 #
 #  rstakeout 'rake test:recent' '**/*.rb'
-#  => Watches all Ruby files in all directories and subdirectories
+#  => Watches all Ruby files in all directories and subdirectories (quotes thus ruby Dir expansion)
 #
 # == Authors
 #
@@ -47,18 +41,7 @@
 
 class Peeper
 
-  def growl(title, msg, img, pri=0, sticky="")
-    system "growlnotify -n autotest --image ~/.autotest_images/#{img} -p #{pri} -m #{msg.inspect} #{title} #{sticky}"
-  end
-
-  def growl_fail(output)
-    growl "FAIL", "#{output}", "fail.png", 2
-  end
-
-  def growl_pass(output)
-    # You don't want to be interrupted by a pass. These aren't the droids you're looking for.
-    # growl "Pass", "#{output}", "pass.png"
-  end
+  DEFAULT_FILE_WATCH_LIST = %w[app/**/*.rb lib/**/*.rb spec/**/*.rb test/**/*.rb]
 
   def initialize(command, list_of_targets)
     self.command = command
@@ -74,13 +57,14 @@ class Peeper
     if list.is_a?(Hash)
       @targets = list
     elsif list.is_a?(Array)
+      list = list.empty? ? DEFAULT_FILE_WATCH_LIST : list_of_targets
       list.each do |item|
         Dir[item].each { |file|
           @targets[file] = File.mtime(file)
         }
       end
     else
-      raise ArgumentError, "Expecting an Array or a Hash"
+      raise ArgumentError, "Expecting an Array or a Hash (and received a #{list.class})"
     end
   end
 
@@ -148,14 +132,46 @@ class Peeper
     end
     # TODO Generic growl notification for other actions
   end
+
+private
+
+  def growl(title, msg, img, pri=0, sticky="")
+    system "growlnotify -n autotest --image ~/.autotest_images/#{img} -p #{pri} -m #{msg.inspect} #{title} #{sticky}"
+  end
+
+  def growl_fail(output)
+    growl "FAIL", "#{output}", "fail.png", 2
+  end
+
+  def growl_pass(output)
+    # You don't want to be interrupted by a pass. These aren't the droids you're looking for.
+    # growl "Pass", "#{output}", "pass.png"
+  end
+
 end
 
 require 'optparse'
 require 'rdoc/usage'
 
-opts = OptionParser.new
-opts.on("-h", "--help") { RDoc::usage('Usage') }
-opts.parse(ARGV) rescue RDoc::usage('Usage')
+def bail_with_usage(opts)
+  puts opts
+  exit
+end
 
-peeper = Peeper.new(ARGV.first, ARGV[1..-1])
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename($0)} command [options]"
+  opts.separator opts.summary_indent + "command".ljust(opts.summary_width) + " Command to run when files change"
+  opts.on_tail("-h", "--help", "Show this message") do
+    bail_with_usage(opts)
+  end
+  args = opts.parse(ARGV) rescue begin
+    puts "#{$!}\n"
+    bail_with_usage(opts)
+  end
+  options[:command] = args.shift || bail_with_usage(opts)
+  options[:list_of_files] = args
+end
+
+peeper = Peeper.new(options[:command], options[:list_of_files])
 peeper.watch
