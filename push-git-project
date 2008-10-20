@@ -22,9 +22,9 @@ else
   project=$1
 fi
 
-ssh git@$host "cd projectfiles; umask 2; mkdir $project.git; cd $project.git; git --bare init"
-git remote add origin git@$host:projectfiles/$project.git
-git push origin master
-echo
-echo "Project pushed to:"
+ssh $host "cd ~git/projectfiles && umask 2 && mkdir $project.git && cd $project.git && git --bare init" && \
+git remote add origin git@$host:projectfiles/$project.git && \
+git push origin master && \
+echo && \
+echo "Project pushed to:" && \
 git remote show origin

@@ -1,0 +1,3 @@
+[submodule "github-vim"]
+	path = github-vim
+	url = git://github.com/solars/github-vim.git
