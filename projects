@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby -w
+
+def dirstring
+  "\n::#{@dir.sub(%r[/Users/matt/],'')}::"
+end
+
+Dir["/Users/matt/Desktop/projects/*"].each do |@dir|
+  next unless File.directory?(@dir)       # ignore files
+  next if File.basename(@dir).match(/^_/) # ignore dirs starting with '_'
+  Dir.chdir(@dir)
+  ret = `git status 2>&1`
+  case ret
+  when /fatal: Not a git repository/
+    puts "#{dirstring} isn't a git repo"
+  when /nothing to commit/
+    # all good - unix says shutup
+  else
+    puts "#{dirstring}\n#{ret}"
+  end
+end
