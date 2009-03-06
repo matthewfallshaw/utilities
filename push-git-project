@@ -3,14 +3,20 @@ host=git.trike.com.au
 
 function usage () {
    cat <<EOF
-Usage: $progname [-h hostname] [project=pwd]
+Usage: $progname [-h hostname] [-p] [project=pwd]
+
+OPTIONS
+     -p   projectfiles mode (project will be pushed to ~git/projectfiles/project instead of ~git/project)
 EOF
    exit 0
 }
 
+pushpath=
+
 while getopts "h:" opt; do
   case $opt in
     h ) host=$OPTARG ;;
+    p ) pushpath=projectfiles/;;
     \?) usage;;
   esac
 done
@@ -22,8 +28,8 @@ else
   project=$1
 fi
 
-ssh $host "cd ~git/projectfiles && umask 2 && mkdir $project.git && cd $project.git && git --bare init" && \
-git remote add origin git@$host:projectfiles/$project.git && \
+ssh $host "cd ~git/$pushpath && umask 2 && mkdir $project.git && cd $project.git && git --bare init" && \
+git remote add origin git@$host:$pushpath$project.git && \
 git push origin master && \
 echo && \
 echo "Project pushed to:" && \
