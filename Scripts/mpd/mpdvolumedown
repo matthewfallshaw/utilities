@@ -1,0 +1,4 @@
+#!/bin/bash
+MPD_HOST=mpd
+MPD_PORT=6600
+mpc volume -10
