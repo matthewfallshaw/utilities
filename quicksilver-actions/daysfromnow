@@ -1,0 +1,3 @@
+#!/opt/local/bin/ruby
+%w[rubygems activesupport].each {|l| require l }
+print Time.now.in(ARGV.first.to_i.days).strftime("%Y-%m-%d")
