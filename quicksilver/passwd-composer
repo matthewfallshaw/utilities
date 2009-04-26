@@ -19,15 +19,29 @@ fi
 
 if [ $# -ne 1 ]
 then
-  echo -n "Enter the domain >"
-  read DOMAIN
+  DOMAIN="$(/usr/bin/osascript 2>/dev/null <<-'__HEREDOC__'
+with timeout of 300 seconds
+  tell application "System Events"
+    activate
+    set input to display dialog "Please enter the domain:" with title "Domain" with icon note default answer "" buttons {"Cancel", "OK"} default button 2 giving up after 295
+    return text returned of input as string
+  end tell
+end timeout
+  __HEREDOC__
+  )"
 else
   DOMAIN=$1
 fi
 
-echo -n "Enter your master password >"
-stty -echo
-echo -n "$(head -1 | cat - <(echo :$DOMAIN) - | tr -d \\n | $MD5 | cut -b 1-8)" | $XCLIP
-stty echo
-echo -e "\nPassword has been copied to clipboard"
+echo -n "$(/usr/bin/osascript 2>/dev/null <<-'__HEREDOC__'
+with timeout of 300 seconds
+tell application "System Events"
+  activate
+  set input to display dialog "Please enter your master password:" with title "Password" with icon caution default answer "" buttons {"Cancel", "OK"} default button 2 giving up after 295 with hidden answer
+  return text returned of input as string
+end tell
+end timeout
+__HEREDOC__
+)" | cat - <(echo :$DOMAIN) - | tr -d \\n | $MD5 | cut -b 1-8 | $XCLIP
 
+echo -e "\nPassword has been copied to clipboard"
