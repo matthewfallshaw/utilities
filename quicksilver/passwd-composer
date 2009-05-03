@@ -42,6 +42,6 @@ tell application "System Events"
 end tell
 end timeout
 __HEREDOC__
-)" | cat - <(echo :$DOMAIN) - | tr -d \\n | $MD5 | cut -b 1-8 | $XCLIP
+)" | cat - <(echo :$DOMAIN) - | tr -d \\n | $MD5 | cut -b 1-8 | tr -d \\n | $XCLIP
 
 echo -e "\nPassword has been copied to clipboard"
