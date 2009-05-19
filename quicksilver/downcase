@@ -1,0 +1,2 @@
+#!/usr/bin/env ruby
+`/opt/local/bin/echo -n #{`pbpaste`.downcase} | pbcopy`
