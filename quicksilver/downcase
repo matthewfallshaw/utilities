@@ -1,2 +1,3 @@
 #!/usr/bin/env ruby
+# downcase the contents of the OSX clipboard
 `/opt/local/bin/echo -n #{`pbpaste`.downcase} | pbcopy`
