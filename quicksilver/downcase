@@ -1,3 +1,4 @@
 #!/usr/bin/env ruby
 # downcase the contents of the OSX clipboard
-`/opt/local/bin/echo -n #{`pbpaste`.downcase} | pbcopy`
+%w[rubygems escape].each {|l| require l }
+`/opt/local/bin/echo -n #{Escape.shell_single_word(`pbpaste`.downcase)} | pbcopy`
