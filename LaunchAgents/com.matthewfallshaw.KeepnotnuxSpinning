@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.matthewfallshaw.KeepnotnuxSpinning</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>[</string>
+      <string>-d</string>
+      <string>/Volumes/notnux</string>
+      <string>]</string>
+      <string>&amp;&amp;</string>
+      <string>touch</string>
+      <string>/Volumes/notnux/.keepThisDriveSpinning</string>
+      <string>&amp;&amp;</string>
+      <string>rm</string>
+      <string>/Volumes/notnux/.keepThisDriveSpinning</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>240</integer>
+  </dict>
+</plist>
