@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+ <title>BetterZip</title>
+ <style type="text/css">
+ /* <![CDATA[ */
+	html {
+		background: #111;
+	}
+	body {
+		margin: 0px;
+		font: 10px "Lucida Grande";
+		color: #AAA;
+	}
+	#headwrap {
+		height: 135px;
+		width: 98%;
+		background: #111;
+		z-index: 10;
+		margin: 0 1%;
+	}
+	#headwrap.abs {
+		position: absolute;
+	}
+	#headwrap.fix {
+		position: fixed;
+	}
+	#data {
+		margin: 20px;
+		color: #aaa;
+		margin: auto;
+		width:100%;
+		position: relative;
+		top: 135px;
+		z-index: 1;
+	}
+	#head {
+		background: #111;
+		height: 120px;
+		padding: 5px;
+		color: #aaa;
+		float: left;
+	}
+	#head td {
+		padding: 1px;
+	}
+	a {
+		text-decoration: none;
+		color: white;
+	}
+	h1 {
+		display: inline;	
+	}
+	#betterzip {
+		color: #FFF;
+		float: right;
+		font-size: 12px;
+		font-weight: bold;
+		margin-top: 5px;
+	}
+	#betterzip span {
+		color: #999;
+		font-size: 9px;
+		font-weight: normal;
+	}
+	#config {
+		position: absolute;
+		padding: 5px;
+		top: 140px; right: 10px;
+		/* width: 152px;*/
+		z-index: 10;
+		margin-top: -30px;
+	}
+	#config hr {
+		height: 1px;
+		border: 0;
+		border-top: 0;
+		margin: 15px 0px;
+		color: #333;
+	}
+	#config ul {
+		list-style-type: none;
+		padding: 5px 20px;
+		margin: 0;
+	}
+	#config #disclosure {
+		height: 23px;
+		width: 152px;
+		text-align: center;
+		padding: 3px;
+		border: 0;
+		margin: -5px -23px -5px auto;
+		background: url(file:///Library/QuickLook/BetterZipQL.qlgenerator/Contents/Resources/config.png) no-repeat;
+		z-index: 20;
+	}
+	#controls {
+		/*margin-top: 5px;*/
+		padding: 10px 5px 5px 5px;
+		background-color: black;
+		border: 1px solid #333;
+	}
+	#data_table {
+		width:98%;
+		margin: 0 1%;
+	}
+	.row0 {
+		background-color: #222;
+	}
+	.row1 {
+		background-color: #111;
+	}
+	table, tr {
+		margin: 0;
+		padding: 0;
+		border-collapse: collapse;
+	}
+	#data td, #data th {
+		padding: 3px 8px;
+		margin: 0;
+	}
+	#data th {
+		background: url(file://%resource_path%/bkg.png) repeat-x 3px;
+		background-color: #000;
+		font-weight: bold;
+		color: white;
+		height: 20px;
+		margin-top:2px;
+	}
+	.n {
+		display: inline;
+		padding: 2px;
+		padding-top: 6px;
+	}
+	.colName, .colDate, .colKind, .colAttributes {
+		text-align: left;
+	}
+	.r, .colSize, .colPacked {
+		text-align: right;
+	}
+	.i {
+		float: left;
+		width: 16px;
+		height: 16px;
+	}
+	.open {
+		float: left;
+		width: 16px;
+		height: 16px;
+		background: url(file://%resource_path%/open.png) no-repeat 3px;
+		margin-left: -18px;
+	}
+ /* ]]> */
+ </style>
+
+  <script src="file://%resource_path%/prototype.js" type="text/javascript"></script>
+	<script src="file://%resource_path%/scriptaculous.js" type="text/javascript"></script>
+  <script src="file://%resource_path%/betterzipql.js" type="text/javascript"></script>
+  <script src="file://%resource_path%/config.js" type="text/javascript"></script>
+  <script type="text/javascript">
+	<!--
+		var resPath = "file://%resource_path%";
+	// -->
+	</script>
+</head>
+
+<body onLoad="loadDone();">
+	<div id="headwrap" class="abs">
+		<div id="head">
+			<img src="%icon%" align="left" height="128" width="128" hspace="20">
+			<h1>%name%</h1>
+			<table>
+				<tr><td class="r">%Path%:</td><td>%path%</td></tr>
+				<tr><td class="r">%Kind%:</td><td>%kind%</td></tr>
+				<tr><td class="r">%Date Modified%:</td><td>%time%</td></tr>
+				<tr><td class="r">%Size%:</td><td>%unco%</td></tr>
+				<tr><td class="r">%Packed%:</td><td>%comp%</td></tr>
+			</table>
+		</div>
+
+		<div id="betterzip">
+			<a href="http://macitbetter.com/">Powered by BetterZip<br/>
+				<span>Better archiving for your Mac.</span>
+			</a>
+		</div>
+		<div style="clear:both;"></div>
+
+		<div id="config">
+			<div id="disclosure" onClick="return Effect.toggle ('controls', 'blind');">%Configuration%</div>
+			<div id="controls" style="display: none;">
+				<h3>%Layout%</h3>
+				<ul>
+					<li><input type="checkbox" id="keepHeaderFixed" onClick="tgglHead()" />
+						<label for ="keepHeaderFixed">%Keep header fixed%</label></li>
+				</ul>
+				<hr noshade />
+				<h3>%Item Visibility%</h3>
+				<ul>
+					<li><input type="checkbox" id="showHiddenFiles" onClick="tgglHidden()" />
+						<label for ="showHiddenFiles">%Show hidden files%</label></li>
+					<li><input type="checkbox" id="showPackageContents" onClick="tgglPackages()"/>
+						<label for ="showPackageContents">%Show package contents%</label></li>
+				</ul>
+				<hr noshade />
+				<h3>%Columns%</h3>
+				<p>
+				<ul>
+					<li><input type="checkbox" id="colDate" onClick="tgglColumns()"/>
+					<label for ="colDate">%Date Modified%</label></li>
+					<li><input type="checkbox" id="colSize" onClick="tgglColumns()"/>
+					<label for ="colSize">%Size%</label></li>
+					<li><input type="checkbox" id="colPacked" onClick="tgglColumns()"/>
+					<label for ="colPacked">%Packed%</label></li>
+					<li><input type="checkbox" id="colKind" onClick="tgglColumns()"/>
+					<label for ="colKind">%Kind%</label></li>
+					<li><input type="checkbox" id="colAttributes" onClick="tgglColumns()"/>
+					<label for ="colAttributes">%Attributes%</label></li>
+				</ul></p>
+			</div>
+		</div>
+	</div>
+	
+	<div id="data">
+	<table id="data_table">
+		<tr><th class="colName">%Name%</th><th class="colDate">%Date Modified%</th><th class="colSize">%Size%</th><th class="colPacked">%Packed%</th><th class="colKind">%Kind%</th><th class="colAttributes">%Attributes%</th></tr>
+		%table_data%
+	</table>
+	</div>
+
+</body>
+</html>

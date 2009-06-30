@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>QLGenerator</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.vmware.vm-package</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleExecutable</key>
+	<string>libFQL.dylib</string>
+	<key>CFBundleName</key>
+	<string>VMware Fusion QuickLook</string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+        <string>com.vmware.fusion.quicklook</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleVersion</key>
+	<string>159196</string>
+	<key>CFBundleShortVersionString</key>
+	<string>2.0.4</string>
+        <key>NSHumanReadableCopyright</key>
+        <string>Copyright &#169; 1998-2009 VMware, Inc.</string>
+	<key>CFPlugInDynamicRegisterFunction</key>
+	<string></string>
+	<key>CFPlugInDynamicRegistration</key>
+	<string>NO</string>
+	<key>CFPlugInFactories</key>
+	<dict>
+		<key>B3406983-B7A7-4D5A-A4D3-15620634BCBA</key>
+		<string>QuickLookGeneratorPluginFactory</string>
+	</dict>
+	<key>CFPlugInTypes</key>
+	<dict>
+		<key>5E2D9680-5022-40FA-B806-43349622E5B9</key>
+		<array>
+			<string>B3406983-B7A7-4D5A-A4D3-15620634BCBA</string>
+		</array>
+	</dict>
+	<key>CFPlugInUnloadFunction</key>
+	<string></string>
+    <!-- Change following property to <true/> if the generators supports
+         multiple concurrent requests -->
+    <key>QLSupportsConcurrentRequests</key>
+    <false/>
+    <!-- Change following property to <true/> if the generators needs
+         to be run on main thread -->
+    <key>QLNeedsToBeRunInMainThread</key>
+    <false/>
+    <!-- Change following property to indicate the minimum useful size for a thumbnail the generator
+     can produce. If your generator is fast enough, you can remove the minimum size so to appear in lists -->
+    <key>QLThumbnailMinimumSize</key>
+    <real>51</real>
+    <!-- Change following properites to indicate the preview size to use if preview generation takes too long -->
+    <key>QLPreviewWidth</key>
+    <real>800</real>
+    <key>QLPreviewHeight</key>
+    <real>600</real>
+</dict>
+</plist>
