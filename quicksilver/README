@@ -4,7 +4,7 @@ INSTALL
 # command , (for preferences)
 # Catalog
 # Click the '+' in the bottom left and add a File & Folder Scanner
-# Select this directory
+# Select the bin subdirectory of this directory
 # Click the small 'i' in the bottom right
 # "Include Contents:" Folder Contents (Depth: 2)
 # Command r (to rescan catalog)
