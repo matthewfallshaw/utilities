@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
-# HTML unescape the contents of the OSX clipboard
-%w[rubygems escape htmlentities].each {|l| require l }
-`/opt/local/bin/echo -n #{Escape.shell_single_word(HTMLEntities.decode_entities(`pbpaste`))} | pbcopy`
+# HTML decode the contents of the OSX clipboard
+# WARNING: this pretty much doesn't work - I guess that pbcopy isn't cooperating
+
+%w[rubygems htmlentities].each {|l| require l }
+IO.popen('pbcopy', 'w').print(HTMLEntities.decode_entities(IO.popen('pbpaste', 'r').read))

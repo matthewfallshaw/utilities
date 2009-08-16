@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
 # CGI unescape the contents of the OSX clipboard
+
 require 'cgi'
-`/opt/local/bin/echo -n #{CGI.unescape(`pbpaste`)} | pbcopy`
+IO.popen('pbcopy', 'w').print(CGI.unescape(IO.popen('pbpaste', 'r').read))
