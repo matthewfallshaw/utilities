@@ -13,6 +13,9 @@ EOF
 
 find . -type d -empty -exec touch {}/.gitignore \;
 
+rm -rf test
+script/generate rspec
+
 rm public/public/index.html
 
 git add .
