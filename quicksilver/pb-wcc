@@ -1,0 +1,4 @@
+#!/bin/bash
+# Word count the clipboard on OSX
+
+pbpaste | wc -c | pbcopy
