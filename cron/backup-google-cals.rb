@@ -9,7 +9,7 @@ threads = []
 %w[trikemtgrm      fjch0inl5i4uqjs8t1kvqaoduk%40group.calendar.google.com/private-f716d7754e07965b8fe68912ba7a9917/basic.ics],
 ].each do |file, addr|
   threads << Thread.new(file, addr) do |file, addr|
-    `wget http://www.google.com/calendar/ical/#{addr} -O #{file}.ics`
+    `wget --quiet http://www.google.com/calendar/ical/#{addr} -O #{file}.ics`
   end
 end
 threads.each { |t| t.join }
