@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+# automatically change configuration of Mac OS X based on location
+# inspired by: http://tech.inhelsinki.nl/locationchanger/
+
+lockfile = File.join(ENV["HOME"],".locationchanger.lock")
+exit 1 if File.exist?(lockfile)
+
+begin
+  `touch #{lockfile}`
+  
+  file = __FILE__
+  file = File.expand_path(File.readlink(file), File.dirname(file)) while File.symlink?(file)
+  require File.join(File.dirname(file), 'lib/location')
+  
+  require 'logger'
+  log = Logger.new(File.join(ENV["HOME"],".locationchanger.log"))
+  log.level = Logger::INFO
+  
+  # get a little breather before we get data for things to settle down
+  sleep 2
+  
+  location = Location.new
+  case location.location
+  when "Canning"
+    `/Users/matt/dev/utils/Scripts/Set\ Time\ Machine\ drive.sh`
+    # turn airport on
+    # networksetup -setairportpower en1 on
+  when "Trike"
+    `/Users/matt/dev/utils/Scripts/Set\ Time\ Machine\ drive.sh`
+    # turn airport off
+    # `networksetup -setairportpower en1 off` if location.airport_power?
+  when "Prior"
+    # turn airport on
+  else # Automatic
+    #
+  end
+  
+  # do some stuff here that needs to happen after every network change
+  `scselect #{location.location}`
+
+  log.info location.to_s
+  puts location.to_s
+ensure
+  `rm #{lockfile}`
+end
+
+exit 0
