@@ -10,36 +10,36 @@ begin
   
   file = __FILE__
   file = File.expand_path(File.readlink(file), File.dirname(file)) while File.symlink?(file)
-  require File.join(File.dirname(file), 'lib/location')
-  
-  require 'logger'
-  log = Logger.new(File.join(ENV["HOME"],".locationchanger.log"))
-  log.level = Logger::INFO
+  require File.join(File.dirname(file), 'lib/location_detector')
   
   # get a little breather before we get data for things to settle down
   sleep 2
   
-  location = Location.new
-  case location.location
-  when "Canning"
-    `/Users/matt/dev/utils/Scripts/Set\ Time\ Machine\ drive.sh`
-    # turn airport on
-    # networksetup -setairportpower en1 on
-  when "Trike"
-    `/Users/matt/dev/utils/Scripts/Set\ Time\ Machine\ drive.sh`
-    # turn airport off
-    # `networksetup -setairportpower en1 off` if location.airport_power?
-  when "Prior"
-    # turn airport on
-  else # Automatic
-    #
+  location_detector = LocationDetector.new
+  if location_detector.moved?
+    case location_detector.location
+    when "Canning"
+      `/Users/matt/dev/utils/Scripts/Set\\ Time\\ Machine\\ drive.sh`
+      # turn airport on
+      # networksetup -setairportpower en1 on
+    when "Trike"
+      `/Users/matt/dev/utils/Scripts/Set\\ Time\\ Machine\\ drive.sh`
+      # turn airport off
+      # `networksetup -setairportpower en1 off` if location_detector.airport_power?
+    when "Prior"
+      # turn airport on
+    else # Automatic
+      #
+    end
+    
+    # do some stuff here that needs to happen after every network change
+    # `scselect #{location_detector.location}`
+    location_detector.log_location
+    
+    puts location_detector.to_s
+  else
+    puts location_detector.to_s + "  # no change"
   end
-  
-  # do some stuff here that needs to happen after every network change
-  `scselect #{location.location}`
-
-  log.info location.to_s
-  puts location.to_s
 ensure
   `rm #{lockfile}`
 end

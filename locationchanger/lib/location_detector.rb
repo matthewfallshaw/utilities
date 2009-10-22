@@ -1,4 +1,4 @@
-class Location
+class LocationDetector
   # locations (use to be used Location name here)
   LOCATIONS = {
     "Canning" => {
@@ -43,7 +43,13 @@ class Location
   end
   
   def location
-    location_from_ssid || location_from_en0ip || location_from_available_ssids || location_from_fallback
+    @location ||= 
+      location_from_ssid || location_from_en0ip || 
+      location_from_available_ssids || location_from_fallback
+  end
+  
+  def moved?
+    location != last_location
   end
   
   def location_from_ssid
@@ -80,6 +86,27 @@ class Location
     "Automatic"
   end
   
+  def logfile
+    File.join(ENV["HOME"],".locationchanger.log")
+  end
+  def logtail(n = 10)
+    `tail -n #{n} #{logfile}`.split("\n")
+  end
+  def last_location
+    logtail[-1][/Location: (\w*)/,1]
+  end
+  require 'logger'
+  def logger
+    @logger ||= begin
+      log = Logger.new(logfile)
+      log.level = Logger::INFO
+      log
+    end
+  end
+  def log_location
+    logger.info self.to_s
+  end
+  
   private
   
   def enip(num)
@@ -89,4 +116,5 @@ class Location
     @available_ssid_command ||=
       `/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -s`
   end
+  
 end

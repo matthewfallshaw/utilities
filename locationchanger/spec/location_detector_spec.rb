@@ -1,9 +1,9 @@
-require File.join(File.dirname(__FILE__), "../lib/location")
+require File.join(File.dirname(__FILE__), "../lib/location_detector")
 %w[rubygems spec].each { |@l| require @l }
 
-describe Location do
+describe LocationDetector do
   before(:each) do
-    @l = Location.new
+    @l = LocationDetector.new
   end
   
   describe "#to_s" do
@@ -54,7 +54,7 @@ describe Location do
     end
     describe "when on home ssid" do
       before(:each) do
-        @l.stub(:ssid).and_return(Location::LOCATIONS["Canning"][:ssid])
+        @l.stub(:ssid).and_return(LocationDetector::LOCATIONS["Canning"][:ssid])
       end
       it "#location should be Canning" do
         @l.location.should == "Canning"
@@ -71,7 +71,7 @@ describe Location do
     describe "when no ssid and on home IP" do
       before(:each) do
         @l.stub(:ssid).and_return("")
-        @l.stub(:en0ip).and_return(Location::LOCATIONS["Canning"][:en0ip])
+        @l.stub(:en0ip).and_return(LocationDetector::LOCATIONS["Canning"][:en0ip])
       end
       it "#location should be Canning" do
         @l.location.should == "Canning"
@@ -91,7 +91,7 @@ describe Location do
         @l.stub(:en0ip).and_return("192.168.0.1")
       end
       it "#location should be Trike" do
-        @l.stub(:available_ssids).and_return(["Other", Location::LOCATIONS["Trike"][:ssid], "Another"])
+        @l.stub(:available_ssids).and_return(["Other", LocationDetector::LOCATIONS["Trike"][:ssid], "Another"])
         @l.location.should == "Trike"
       end
       it "#location should call the expensive #available_ssid_command" do
@@ -102,10 +102,25 @@ describe Location do
         @l.location
       end
       it "#reason should be :available_ssid" do
-        @l.stub(:available_ssids).and_return(["Other", Location::LOCATIONS["Trike"][:ssid], "Another"])
+        @l.stub(:available_ssids).and_return(["Other", LocationDetector::LOCATIONS["Trike"][:ssid], "Another"])
         @l.location
         @l.reason.should == :available_ssid
       end
     end
   end
+  
+  describe "utility methods:" do
+    it "logfile should be ~/.locationchanger.log" do
+      @l.logfile.should == File.expand_path("~/.locationchanger.log")
+    end
+    it "logtail should be last 10 lines of logfile"
+    it "last_location should be last location from logfile" do
+      @l.stub!(:logtail).and_return([
+        "I, [2009-10-22T12:48:21.844394 #37637]  INFO -- : Location: Canning (from ssid)",
+        "I, [2009-10-22T13:16:47.390893 #37915]  INFO -- : Location: Trike (from ssid)",
+      ])
+      @l.last_location.should == "Trike"
+    end
+  end
+  
 end
