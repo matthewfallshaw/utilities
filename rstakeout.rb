@@ -57,7 +57,7 @@ class Peeper
     if list.is_a?(Hash)
       @targets = list
     elsif list.is_a?(Array)
-      list = list.empty? ? DEFAULT_FILE_WATCH_LIST : list_of_targets
+      list = list.empty? ? DEFAULT_FILE_WATCH_LIST : list
       list.each do |item|
         Dir[item].each { |file|
           @targets[file] = File.mtime(file)
