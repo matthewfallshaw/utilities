@@ -42,17 +42,21 @@ Dir.chdir File.dirname(__FILE__) do
     elsif replace_all
       replace_file(file)
     elsif File.exist?(original)
-      print "overwrite #{file}? [ynaq] "
-      case $stdin.gets.chomp
-      when 'a'
-        replace_all = true
-        replace_file(file)
-      when 'y'
-        replace_file(file)
-      when 'q'
-        exit
-      else
+      if File.directory?(file)
         puts "#{file}: skipped"
+      else
+        print "overwrite #{file}? [ynaq] "
+        case $stdin.gets.chomp
+        when 'a'
+          replace_all = true
+          replace_file(file)
+        when 'y'
+          replace_file(file)
+        when 'q'
+          exit
+        else
+          puts "#{file}: skipped"
+        end
       end
     else
       copy_file(file)
