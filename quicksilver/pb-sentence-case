@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+# downcase the contents of the OSX clipboard
+
+pb = IO.popen('pbpaste', 'r').read
+out = ""
+pb.each("\s") {|w| out << w.capitalize}
+IO.popen('pbcopy', 'w').print(out)
