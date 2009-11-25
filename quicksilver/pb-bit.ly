@@ -17,3 +17,4 @@ rescue
   output = clip_url
 end
 IO.popen('pbcopy', 'w').print(output)
+print output
