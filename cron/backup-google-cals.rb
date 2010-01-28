@@ -17,7 +17,13 @@ end
 threads.each { |t| t.join }
 
 # Check that the check is happening
-if (Time.now - File.mtime(".checked")) > (2 * 24 * 60 * 60)
+require 'pathname'
+checkfile = Pathname.new("ics-checked")
+if !checkfile.exist? || ((Time.now - checkfile.mtime) > (2 * 24 * 60 * 60))
   require 'rubygems'; require 'action_view'; include ActionView::Helpers::DateHelper
-  warn "Problem: iCal backup script ran okay, but the script that checks that this script is running hasn't run for #{distance_of_time_in_words_to_now(File.mtime(".checked"))}"
+  if checkfile.exist?
+    warn "Problem: iCal backup script ran okay, but the script that checks that this script is running hasn't run for #{distance_of_time_in_words_to_now(checkfile.mtime)}"
+  else
+    warn "Problem: iCal backup script ran okay, but I can't find the file that should be left by the script that checks that this script is running, which may indicate that the check script isn't running"
+  end
 end
