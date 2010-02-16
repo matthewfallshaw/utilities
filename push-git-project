@@ -3,7 +3,7 @@ host=git.trike.com.au
 
 function usage () {
    cat <<EOF
-Usage: $progname [-h hostname] [-u username] [-p] [project=pwd]
+Usage: $progname [-h hostname] [-p] [project=pwd]
 
 OPTIONS
      -p   projectfiles mode (project will be pushed to ~git/projectfiles/project instead of ~git/project)
