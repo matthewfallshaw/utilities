@@ -13,7 +13,8 @@ begin
   curl_url_json = `curl --stderr /dev/null \"http://api.bit.ly/shorten?longUrl=#{ encoded_url }&version=2.0.1&login=yourbitlylogin&apiKey=yourbitlyapikey&history=1\"`
   bitly_result = JSON.parse(curl_url_json)
   output = bitly_result["results"].values.first["shortUrl"]
-rescue
+rescue Exception => e
+  puts "# Failed, sorry: #{e.message}"
   output = clip_url
 end
 IO.popen('pbcopy', 'w').print(output)
