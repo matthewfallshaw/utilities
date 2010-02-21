@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
 # Dasherize the clipboard on OSX
 
-IO.popen('pbcopy', 'w').print(IO.popen('pbpaste', 'r').read.gsub(/[\W_]/,"-").gsub(/-+/,"-").gsub(/^-|-$/,""))
+IO.popen('pbcopy', 'w').print(
+  IO.popen('pbpaste', 'r').read.gsub(/[\W_]/,"-").gsub(/-+/,"-").gsub(/^-|-$/,"")
+)
