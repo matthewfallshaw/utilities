@@ -30,36 +30,49 @@ def secrets
   @secrets ||= YAML.load(open(File.expand_path('~/.dotfiles_secrets')))
 end
 
-replace_all = false
-Dir.chdir File.dirname(__FILE__) do
-  Dir['*'].each do |file|
-    next if %w[install.rb Rakefile README vendor bin].include?(file)
+def replace(file)
+  original = File.join(File.dirname(__FILE__), "bin", file)
 
-    original = File.join(File.dirname(__FILE__), "bin", file)
-
-    if secrets[file] and not File.directory?(file)
-      copy_and_replace_secrets(file)
-    elsif replace_all
-      replace_file(file)
-    elsif File.exist?(original)
-      if File.directory?(file)
-        puts "#{file}: skipped"
-      else
-        print "overwrite #{file}? [ynaq] "
-        case $stdin.gets.chomp
-        when 'a'
-          replace_all = true
-          replace_file(file)
-        when 'y'
-          replace_file(file)
-        when 'q'
-          exit
-        else
-          puts "#{file}: skipped"
-        end
-      end
+  if secrets[file] and not File.directory?(file)
+    copy_and_replace_secrets(file)
+  elsif @replace_all
+    replace_file(file)
+  elsif File.exist?(original)
+    if File.directory?(file)
+      puts "#{file}: skipped"
     else
-      copy_file(file)
+      print "overwrite #{file}? [ynaq] "
+      case $stdin.gets.chomp
+      when 'a'
+        @replace_all = true
+        replace_file(file)
+      when 'y'
+        replace_file(file)
+      when 'q'
+        exit
+      else
+        puts "#{file}: skipped"
+      end
+    end
+  else
+    copy_file(file)
+  end
+end
+
+@replace_all = false
+if ARGV.empty?
+  Dir.chdir File.dirname(__FILE__) do
+    Dir['*'].each do |file|
+      next if %w[install.rb Rakefile README vendor bin].include?(file)
+      replace(file)
+    end
+  end
+else
+  ARGV.each do |file|
+    if File.exist?(file)
+      replace(file)
+    else
+      puts "What is this #{file} of which you speak?"
     end
   end
 end
