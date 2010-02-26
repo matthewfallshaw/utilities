@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+# CGI escape the contents of the OSX clipboard
+
+require 'cgi'
+IO.popen('pbcopy', 'w').print(CGI.escape(IO.popen('pbpaste', 'r').read))
