@@ -60,6 +60,7 @@ def replace(file)
 end
 
 @replace_all = false
+`mkdir -p #{File.expand_path(File.join(File.dirname(__FILE__)),"bin")}`
 if ARGV.empty?
   Dir.chdir File.dirname(__FILE__) do
     Dir['*'].each do |file|
