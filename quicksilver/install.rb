@@ -27,7 +27,13 @@ def copy_and_replace_secrets(file)
 end
 
 def secrets
-  @secrets ||= YAML.load(open(File.expand_path('~/.dotfiles_secrets')))
+  @secrets ||= begin
+                 if File.exist?('~/.dotfiles_secrets')
+                   YAML.load(open(File.expand_path('~/.dotfiles_secrets')))
+                 else
+                   {}
+                 end
+               end
 end
 
 def replace(file)
