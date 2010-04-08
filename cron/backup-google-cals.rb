@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-Dir.chdir("/Users/matt/Dropbox/Archive")
+Dir.chdir("/Users/matt/Dropbox/Archive/calendars")
 
 # Backup
 threads = []
