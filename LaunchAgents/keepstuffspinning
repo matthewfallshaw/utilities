@@ -1,0 +1,2 @@
+#!/bin/sh
+[ -d /Volumes/Stuff ] && mount | grep Stuff && touch /Volumes/Stuff/.keepThisDriveSpinning && rm /Volumes/Stuff/.keepThisDriveSpinning
