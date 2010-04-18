@@ -1,3 +1,3 @@
 #!/bin/sh
 [ -d /Volumes/Time\ Machine ] && mount | grep "Time Machine" && touch /Volumes/Time\ Machine/.keepThisDriveSpinning && rm /Volumes/Time\ Machine/.keepThisDriveSpinning
-return 0
+exit 0
