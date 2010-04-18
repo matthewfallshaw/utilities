@@ -1,2 +1,3 @@
 #!/bin/sh
 [ -d /Volumes/Spare ] && mount | grep Spare && touch /Volumes/Spare/.keepThisDriveSpinning && rm /Volumes/Spare/.keepThisDriveSpinning
+return 0
