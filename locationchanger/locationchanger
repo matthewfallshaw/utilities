@@ -3,13 +3,19 @@
 # inspired by: http://tech.inhelsinki.nl/locationchanger/
 
 lockfile = File.join(ENV["HOME"],".locationchanger.lock")
-exit 1 if File.exist?(lockfile)
+lockfile_age = (Time.now - File.mtime(lockfile))
+exit 1 if File.exist?(lockfile) && lockfile_age < 30
+
+def file
+  @file ||= begin
+              file = __FILE__
+              file = File.expand_path(File.readlink(file), File.dirname(file)) while File.symlink?(file)
+            end
+end
 
 begin
   `touch #{lockfile}`
   
-  file = __FILE__
-  file = File.expand_path(File.readlink(file), File.dirname(file)) while File.symlink?(file)
   require File.join(File.dirname(file), 'lib/location_detector')
   
   # get a little breather before we get data for things to settle down
