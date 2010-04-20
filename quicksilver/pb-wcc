@@ -1,4 +1,7 @@
 #!/bin/bash
 # Word count the clipboard on OSX
 
-pbpaste | wc -c | pbcopy
+out=`pbpaste | wc -c`
+growlnotify -a Quicksilver -t "Wordcount (chars)" -m $out
+echo $out | pbcopy
+echo $out
