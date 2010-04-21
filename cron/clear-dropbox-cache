@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # clear Dropbox cache if it's larger than 5GB
-[ `du -s ~/.dropbox/cache | cut -f1` -ge 5000000 ] && rm -r ~/.dropbox/cache/*
+[ `du -s ~/.dropbox/cache | cut -f1` -ge 5000000 ] && rm -rf ~/.dropbox/cache/*
