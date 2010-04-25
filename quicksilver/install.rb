@@ -8,7 +8,7 @@
 %w[rubygems rake yaml].each {|l| require l }
 
 def replace_file(file)
-  system %Q{rm -r "$PWD/bin/#{file}"}
+  system %Q{rm -r "$PWD/bin/#{file}"} rescue nil
   copy_file(file)
 end
  
@@ -28,8 +28,9 @@ end
 
 def secrets
   @secrets ||= begin
-                 if File.exist?('~/.dotfiles_secrets')
-                   YAML.load(open(File.expand_path('~/.dotfiles_secrets')))
+                 path = File.join(ENV['HOME'], '.dotfiles_secrets')
+                 if File.exist?(path)
+                   YAML.load(open(path))
                  else
                    {}
                  end
