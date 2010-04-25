@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# Upcase the contents of the OSX clipboard
+# Sentence caserize the contents of the OSX clipboard
 
 def notify(message)
   require 'shellwords'
@@ -7,6 +7,6 @@ def notify(message)
   message
 end
 
-output = IO.popen('pbpaste', 'r').read.upcase
+output = IO.popen('pbpaste', 'r').read.downcase.sub(/^./) {|x| x.upcase }
 IO.popen('pbcopy', 'w').print(output)
 notify(output)

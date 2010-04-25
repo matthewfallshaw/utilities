@@ -3,14 +3,18 @@
 # Convert the contents of the clipboard to html (with
 # RedCloth[http://whytheluckystiff.net/ruby/redcloth/], so assuming it's
 # Textile or Markdown) and send it to STDOUT
-# (I use this from a shell TextExpander[http://smileonmymac.com/TextExpander/]
-# snippet).
 
 %w[rubygems redcloth].each {|l| require l }
 
-clipboard = IO.popen('pbpaste', 'r').read
-textiled = RedCloth.new(clipboard).to_html
-textiled = textiled[3..-1] if textiled[0..2] == "<p>"
-textiled = textiled[0..-5] if textiled[-4..-1] == "</p>"
+def notify(message)
+  require 'shellwords'
+  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
+  message
+end
 
-IO.popen('pbcopy', 'w').print(textiled)
+clipboard = IO.popen('pbpaste', 'r').read
+output = RedCloth.new(clipboard).to_html
+output.gsub!(%r|^(?:<p>)?(.*?)(?:</p>)?$|,'\1')  # remove wrapping paragraph
+
+IO.popen('pbcopy', 'w').print(output)
+notify(output)

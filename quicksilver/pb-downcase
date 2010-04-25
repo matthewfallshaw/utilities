@@ -1,4 +1,12 @@
 #!/usr/bin/env ruby
-# downcase the contents of the OSX clipboard
+# Downcase the contents of the OSX clipboard
 
-IO.popen('pbcopy', 'w').print(IO.popen('pbpaste', 'r').read.downcase)
+def notify(message)
+  require 'shellwords'
+  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
+  message
+end
+
+output = IO.popen('pbpaste', 'r').read.downcase
+IO.popen('pbcopy', 'w').print(output)
+notify(output)

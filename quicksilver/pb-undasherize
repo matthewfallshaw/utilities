@@ -1,4 +1,12 @@
 #!/usr/bin/env ruby
-# Un-dasherize the clipboard on OSX
+# Undasherize the clipboard on OSX (to spaces)
 
-IO.popen('pbcopy', 'w').print(IO.popen('pbpaste', 'r').read.gsub(/[-_]/," ").gsub(/ +/," ").gsub(/^ | $/,""))
+def notify(message)
+  require 'shellwords'
+  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
+  message
+end
+
+output = IO.popen('pbpaste', 'r').read.gsub(/[-_]+/," ")
+IO.popen('pbcopy', 'w').print(output)
+notify(output)
