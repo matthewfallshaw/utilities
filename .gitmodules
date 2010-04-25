@@ -1,6 +1,3 @@
 [submodule "github-vim"]
 	path = github-vim
 	url = git://github.com/solars/github-vim.git
-[submodule "fuzzyfinder_textmate"]
-	path = fuzzyfinder_textmate
-	url = git://github.com/jamis/fuzzyfinder_textmate.git
