@@ -1,2 +1,0 @@
-#!/bin/bash
-curl http://music.trike.com.au/add/474 -d"<>"
