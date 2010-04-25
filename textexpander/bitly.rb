@@ -1,1 +1,0 @@
-../quicksilver/bin/pb-bit.ly
