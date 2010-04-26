@@ -1,36 +1,84 @@
-#!/bin/bash
-host=git.trike.com.au
+#!/usr/bin/env ruby
+%w[rubygems optparse ostruct inifile].each {|l| require l }
 
-function usage () {
-   cat <<EOF
-Usage: $progname [-h hostname] [-p] [project=pwd]
-
-OPTIONS
-     -p   projectfiles mode (project will be pushed to ~git/projectfiles/project instead of ~git/project)
-EOF
-   exit 0
+REPO = {
+  :primary   => { :host    => "repoprimaryhost",
+                  :gitosis => "repoprimarygitosis",
+                  :gitosisgroup => "repoprimarygitosisgroup"},
+  :secondary => { :host    => "reposecondaryhost",
+                  :gitosis => "reposecondarygitosis",
+                  :gitosisgroup => "reposecondarygitosisgroup"}
 }
 
-pushpath=
+options = OpenStruct.new
+def options.gitosis_conf=(file)
+  if File.file?(file)
+    super file
+  elsif File.file?(File.join(file, "gitosis.conf"))
+    super File.join(file, "gitosis.conf")
+  else
+    abort "I'm looking for a gitosis.conf in there (#{file})... and I can't find it."
+  end
+end
 
-while getopts "ph:" opt; do
-  case $opt in
-    h ) host=$OPTARG ;;
-    p ) pushpath=projectfiles/;;
-    \?) usage;;
-  esac
-done
-shift $(($OPTIND - 1))
+# Defaults
+options.hostname      = REPO[:primary][:host]
+options.gitosis_conf  = REPO[:primary][:gitosis]
+options.gitosis_group = REPO[:primary][:gitosisgroup]
 
-if [ -z $1 ]; then
-  project=`basename \`pwd\``
+# Parsing command line options
+opts = OptionParser.new do |o|
+  o.on('-o', '--host HOSTNAME',
+       "non-default (#{REPO[:primary][:host]}) host to push project to") do |hostname|
+    options.hostname = hostname
+  end
+  o.on('-g', '--gitosis-conf CONF-FILE',
+       "non-default (#{REPO[:primary][:gitosis]})",
+       "gitosis project to push project to") do |conf_file|
+    options.gitosis_conf = conf_file
+  end
+  o.on('-p',
+       "projectfiles mode (project will be pushed to",
+       "~git/projectfiles/project instead of ~git/project)") do |p|
+    options.projectfiles = p ? "projectfiles/" : ""
+  end
+  o.on('-s', '--secondary',
+       "use secondary defaults",
+       "(-h #{REPO[:secondary][:host]} -g #{REPO[:secondary][:gitosis]})") do
+    options.hostname      = REPO[:secondary][:host]
+    options.gitosis_conf  = REPO[:secondary][:gitosis]
+    options.gitosis_group = REPO[:secondary][:gitosisgroup]
+  end
+  o.on('-h', "this help text") { puts o; exit }
+  o.parse!
+end
+
+if ARGV.size == 1
+  options.project = "#{options.projectfiles}#{ARGV.pop}"
+elsif ARGV.empty?
+  options.project = "#{options.projectfiles}#{`basename \`pwd\``}".chomp
 else
-  project=$1
-fi
+  abort "Unexpected arguments.\n#{opts}"
+end
 
-ssh $host "cd ~git/$pushpath && umask 2 && mkdir $project.git && cd $project.git && git --bare init" && \
-git remote add origin git@$host:$pushpath$project.git && \
-git push origin master && \
-echo && \
-echo "Project pushed to:" && \
-git remote show origin
+inifile = IniFile.new(options.gitosis_conf)
+
+# Sanity checks
+abort "I can't find section '#{options.gitosis_group}' and line 'writable = …' in #{options.gitosis_conf}" unless ( inifile[options.gitosis_group] && inifile[options.gitosis_group]['writable'] )
+writable = inifile[options.gitosis_group]['writable'].dup.split(/ /)
+abort "gitosis already knows #{options.project} is writable by #{options.gitosis_group}" if writable.include?(options.project)
+abort "#{options.project} already has a remote 'origin'" if `git remote`.split.include?("origin")
+abort "#{options.project} has nothing to push - you need to commit something" if `git status`.match(/nothing to commit/)
+
+# Processing
+writable << options.project
+
+gitosis_admin = writable.delete("gitosis-admin")
+inifile[options.gitosis_group]['writable'] = "#{gitosis_admin ? "gitosis-admin " : ""}#{writable.sort.join(" ")}"
+inifile.save
+
+puts `cd #{File.dirname(options.gitosis_conf)}; git add gitosis.conf; git commit -m "add project #{options.project} as writable by #{options.gitosis_group}"; git push origin master`
+puts `git remote add origin git@#{options.hostname}:#{options.project}; git push origin master`
+puts
+puts "Project pushed to:"
+puts `git remote show origin`
