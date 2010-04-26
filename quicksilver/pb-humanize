@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+# Sentence caserize the contents of the OSX clipboard
+%w[rubygems active_support].each {|l| require l }
+
+def notify(message)
+  require 'shellwords'
+  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
+  message
+end
+
+output = IO.popen('pbpaste', 'r').read.humanize
+IO.popen('pbcopy', 'w').print(output)
+notify(output)

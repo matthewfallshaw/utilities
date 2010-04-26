@@ -8,7 +8,7 @@
 %w[rubygems rake yaml].each {|l| require l }
 
 def replace_file(file)
-  system %Q{rm -r "$PWD/bin/#{file}"} rescue nil
+  system %Q{rm -r "$PWD/bin/#{file}"} if File.exist?("$PWD/bin/#{file}")
   copy_file(file)
 end
  
