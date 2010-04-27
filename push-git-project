@@ -68,7 +68,6 @@ abort "I can't find section '#{options.gitosis_group}' and line 'writable = …'
 writable = inifile[options.gitosis_group]['writable'].dup.split(/ /)
 abort "gitosis already knows #{options.project} is writable by #{options.gitosis_group}" if writable.include?(options.project)
 abort "#{options.project} already has a remote 'origin'" if `git remote`.split.include?("origin")
-abort "#{options.project} has nothing to push - you need to commit something" if `git status`.match(/nothing to commit/)
 
 # Processing
 writable << options.project
