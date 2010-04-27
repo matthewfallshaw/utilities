@@ -8,7 +8,7 @@
 #     "search_term": replace_term
 #     "other_search_term": other_replace_term
 
-%w[shellwords rubygems rake yaml].each {|l| require l }
+%w[shellwords fileutils rubygems rake yaml].each {|l| require l }
 
 BINDIR = File.expand_path(File.join(ENV["HOME"], "bin"))
 SOURCEDIR = File.expand_path(File.join(File.dirname(__FILE__)))
@@ -22,17 +22,19 @@ def source_file(file)
 end
 
 def replace_file(file)
-  system %Q[rm "#{bin_file}"] if File.exist?(bin_file(file))
+  FileUtils.rm(bin_file(file)) if File.exist?(bin_file(file))
   link_file(file)
 end
  
 def link_file(file)
-  system %Q{ln -s "#{source_file(file)}" "#{bin_file(file)}"}
+  FileUtils.ln_s(source_file(file), bin_file(file))
   puts "#{bin_file(file)}: linked"
 end
 
 def copy_and_replace_secrets(file)
-  system %[cp "#{source_file(file)}" "#{bin_file(file)}"]
+  FileUtils.rm(bin_file(file)) if File.exist?(bin_file(file))
+  FileUtils.chmod(0755, source_file(file))
+  FileUtils.cp(source_file(file), bin_file(file))
   secrets[file].each do |search_term, replace_term|
     system %[ruby -pi -e 'gsub(/#{search_term.shellescape}/, "#{replace_term.shellescape}")' "#{bin_file(file)}"]
   end
