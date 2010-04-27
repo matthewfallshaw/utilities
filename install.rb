@@ -43,10 +43,13 @@ def secrets
   @secrets ||= YAML.load(open(SECRETS))
 end
 
+def file_exists_as_source(file)
+  File.exist?(source_file(file))
+end
 def file_is_symlink_pointing_here(file)
   File.symlink?(bin_file(file)) &&
     File.dirname(File.expand_path(File.readlink(bin_file(file)))) == SOURCEDIR &&
-    File.exist?(source_file(file))
+    file_exists_as_source(file)
 end
 def file_should_be_replaced(file)
   secrets[file] &&
@@ -54,37 +57,50 @@ def file_should_be_replaced(file)
     File.exist?(bin_file(file))
 end
 
-replace_all = false
-did_something = false
-Dir.chdir(File.dirname(__FILE__)) do
-  Dir[File.join(BINDIR,'/*')].each do |file|
-    file = File.basename(file)
-    next unless (file_is_symlink_pointing_here(file) || file_should_be_replaced(file))
-
-    did_something = true
-
-    if secrets[file]
-      copy_and_replace_secrets(file)
-    elsif File.symlink?(bin_file(file)) && (File.readlink(bin_file(file)) == source_file(file))
-      puts "#{bin_file(file)}: already correctly linked"
-    elsif replace_all
+def process(file)
+  if secrets[file]
+    copy_and_replace_secrets(file)
+  elsif File.symlink?(bin_file(file)) && (File.readlink(bin_file(file)) == source_file(file))
+    puts "#{bin_file(file)}: already correctly linked"
+  elsif replace_all
+    replace_file(file)
+  elsif File.exist?(bin_file(file))
+    print "overwrite #{bin_file(file)}? [ynaq] "
+    case $stdin.gets.chomp
+    when 'a'
+      replace_all = true
       replace_file(file)
-    elsif File.exist?(bin_file(file))
-      print "overwrite #{bin_file(file)}? [ynaq] "
-      case $stdin.gets.chomp
-      when 'a'
-        replace_all = true
-        replace_file(file)
-      when 'y'
-        replace_file(file)
-      when 'q'
-        exit
-      else
-        puts "#{bin_file(file)}: skipped"
-      end
+    when 'y'
+      replace_file(file)
+    when 'q'
+      exit
     else
-      link_file(file)
+      puts "#{bin_file(file)}: skipped"
     end
+  else
+    link_file(file)
   end
 end
-puts "I couldn't find anything to do." unless did_something
+
+replace_all = false
+did_something = false
+if ARGV.empty?
+  Dir.chdir(File.dirname(__FILE__)) do
+    Dir[File.join(BINDIR,'/*')].each do |file|
+      file = File.basename(file)
+      next unless (file_is_symlink_pointing_here(file) || file_should_be_replaced(file))
+
+      did_something = true
+      process(file)
+    end
+  end
+  puts "I couldn't find anything to do." unless did_something
+else
+  ARGV.each do |file|
+    file = File.basename(file)
+    next unless file_exists_as_source(file)
+
+    did_something = true
+    process(file)
+  end
+end
