@@ -87,7 +87,7 @@ end
 replace_all = false
 did_something = false
 if ARGV.empty?
-  Dir.chdir(File.dirname(__FILE__)) do
+  Dir.chdir(SOURCEDIR) do
     Dir[File.join(BINDIR,'/*')].each do |file|
       file = File.basename(file)
       next unless (file_is_symlink_pointing_here(file) || file_should_be_replaced(file))
