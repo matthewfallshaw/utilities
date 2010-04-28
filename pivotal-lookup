@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+%w[rubygems httparty].each {|l| require l }
+
+class PivotalApiToken
+  USERNAME = "yourpivotalusername"
+  PASSWORD = "yourpivotalpassword"
+
+  include HTTParty
+  basic_auth USERNAME, PASSWORD
+
+  def self.key
+    @key ||= begin
+               response = get("https://www.pivotaltracker.com/services/v3/tokens/active")
+               response["token"]["guid"]
+             rescue
+               abort "bad response: #{response}"
+             end
+  end
+end
+
+class PivotalApi
+  include HTTParty
+
+  attr_accessor :project_id
+
+  def initialize(project_id)
+    self.class.headers "X-TrackerToken" => PivotalApiToken.key
+    self.class.base_uri "http://www.pivotaltracker.com/services/v3/projects/#{project_id}"
+    self.project_id = project_id
+  end
+
+  def stories(filter = "")
+    self.class.get("/stories", :query => {:filter => clean_filter(filter)})["stories"]
+  end
+
+  def story(id, filter = "")
+    self.class.get("/stories/#{id}", :query => {:filter => clean_filter(filter)})["story"]
+  end
+
+  def clean_filter(filter)
+    if filter.is_a?(Hash)
+      filter.collect {|k,v| "#{k}:#{v}"}.join(" ")
+    elsif filter.respond_to?(:to_s) && filter.match(/^\w+:[^ ]+( \w+:[^ ]+)*$/)
+      filter.to_s
+    else
+      abort "I'm expecting a filter like 'id:1,2,3', not like #{filter}"
+    end
+  end
+
+end
