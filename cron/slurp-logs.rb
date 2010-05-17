@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+
 require 'fileutils'
 log_files = `ssh hq.trike.com.au ssh backup.trike.com.au 'ls /srv/backup/systems/**/srv/www/**/shared/log/*.log*'`.split
 systems_with_logs = log_files.collect {|f| f[%r#/srv/backup/systems/([^/]+)#, 1] }.uniq
@@ -9,7 +10,7 @@ results = systems_with_logs.collect do |system|
 end
 results = results.reject {|r| r.empty? }
 if results.empty?
-  return 0
+  exit 0
 else
   abort "Erm… #{results.inspect}"
 end
