@@ -28,6 +28,7 @@ end
  
 def link_file(file)
   FileUtils.ln_s(source_file(file), bin_file(file))
+  FileUtils.chmod(0755, source_file(file))
   puts "#{bin_file(file)}: linked"
 end
 
@@ -60,6 +61,7 @@ def file_should_be_replaced(file)
 end
 
 def process(file)
+  replace_all = false
   if secrets[file]
     copy_and_replace_secrets(file)
   elsif File.symlink?(bin_file(file)) && (File.readlink(bin_file(file)) == source_file(file))

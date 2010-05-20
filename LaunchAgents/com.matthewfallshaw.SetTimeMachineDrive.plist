@@ -7,9 +7,13 @@
 	<key>ProgramArguments</key>
 	<array>
 		<string>osascript</string>
-		<string>/Users/matt/dev/utils/Scripts/Set\ Time\ Machine\ drive.scpt</string>
+		<string>/Users/matt/dev/utils/Scripts/SetTimeMachinedrive.scpt</string>
 	</array>
+	<key>QueueDirectories</key>
+	<array/>
 	<key>StartOnMount</key>
 	<true/>
+	<key>WatchPaths</key>
+	<array/>
 </dict>
 </plist>

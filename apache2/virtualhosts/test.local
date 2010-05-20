@@ -1,0 +1,19 @@
+<VirtualHost *:80>
+  ServerName test.local
+
+  RewriteEngine On
+  RewriteLog /Users/matt/apache2/virtualhosts/mod_rewrite.log
+  RewriteLogLevel 3
+  RewriteMap test_map txt:/Users/matt/apache2/virtualhosts/rewritemap.txt
+  RewriteCond ${test_map:%{REQUEST_URI}} !=""
+  RewriteRule ^(.*)$ ${test_map:$1} [R=permanent,L]
+  Include /Users/matt/apache2/virtualhosts/rewriterules.txt
+
+  DocumentRoot /Users/matt/tmp/virtualhost/
+</VirtualHost>
+<Directory "/Users/matt/tmp/virtualhost/">
+  Options Indexes MultiViews
+  AllowOverride None
+  Order allow,deny
+  Allow from all
+</Directory>
