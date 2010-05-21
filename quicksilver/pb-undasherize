@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# Undasherize the clipboard on OSX (to spaces)
+# Un-Dasherize the clipboard on OSX
 
 def notify(message)
   require 'shellwords'
@@ -7,6 +7,6 @@ def notify(message)
   message
 end
 
-output = IO.popen('pbpaste', 'r').read.gsub(/[-_]+/," ")
+output = IO.popen('pbpaste', 'r').read.gsub(/[-_]/," ").gsub(/^ +| +$/,"")
 IO.popen('pbcopy', 'w').print(output)
 notify(output)

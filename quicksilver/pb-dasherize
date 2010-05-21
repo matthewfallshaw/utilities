@@ -7,6 +7,6 @@ def notify(message)
   message
 end
 
-output = IO.popen('pbpaste', 'r').read.gsub(/[\W_]/,"-").gsub(/-+/,"-").gsub(/^-|-$/,"")
+output = IO.popen('pbpaste', 'r').read.gsub(/[\W_]/,"-").gsub(/-+/,"-").gsub(/^-+|-+$/,"")
 IO.popen('pbcopy', 'w').print(output)
 notify(output)
