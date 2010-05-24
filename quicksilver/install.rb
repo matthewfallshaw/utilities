@@ -5,7 +5,7 @@
 #   "search_term": replace_term
 #   "other_search_term": other_replace_term
 
-%w[rubygems rake yaml].each {|l| require l }
+%w[shellwords rubygems rake yaml].each {|l| require l }
 
 def replace_file(file)
   system %Q{rm -r "$PWD/bin/#{file}"} if File.exist?("$PWD/bin/#{file}")
@@ -18,7 +18,6 @@ def copy_file(file)
 end
 
 def copy_and_replace_secrets(file)
-  require 'facets/shellwords'
   system %[cp "$PWD/#{file}" "$PWD/bin/#{file}"]
   secrets[file].each do |search_term, replace_term|
     system %[ruby -pi -e 'gsub(/#{Shellwords.escape(search_term)}/, "#{Shellwords.escape(replace_term)}")' "$PWD/bin/#{file}"]
