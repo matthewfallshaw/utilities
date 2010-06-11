@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# Quoted-printable unescape the contents of the OSX clipboard
+
+def notify(message)
+  require 'shellwords'
+  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
+  message
+end
+
+class String
+  def to_quoted_printable(*args)
+    [self].pack("M").gsub(/\n/, "\r\n")
+  end
+  def from_quoted_printable
+    self.gsub(/\r\n/, "\n").unpack("M").first
+  end
+end
+
+output = IO.popen('pbpaste', 'r').read.to_quoted_printable
+IO.popen('pbcopy', 'w').print(output)
+notify(output)
