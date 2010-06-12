@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+class String
+  def rot13
+    self.tr('a-zA-Z','n-za-mN-ZA-M')
+  end
+end
+puts ARGV.join(' ').rot13
+
+#~ t = Time.now
+#~ 100000.times do "this is a test".rot13 end
+#~ puts "String way, #{Time.now - t} seconds"
+#~ #>> String way, 0.578 seconds
+#~ t = Time.now
+#~ 100000.times do "this is a test".tr('a-zA-Z','n-za-mN-ZA-M') end
+#~ puts "tr way, #{Time.now - t} seconds"
+#~ #>> tr way, 0.531 seconds
