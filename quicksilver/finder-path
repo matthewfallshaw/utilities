@@ -4,5 +4,8 @@ osascript<<END
 tell application "Finder"
 	set sel to the selection as text
 	set the clipboard to POSIX path of sel
+    growlNotify("Finder path", the clipboard)
 end tell
 END
+
+pbpaste | /usr/local/bin/growlnotify -a Quicksilver -m -

@@ -2,6 +2,5 @@
 # Word count the clipboard on OSX
 
 out=`pbpaste | wc -w | tr -d \\n`
-/usr/local/bin/growlnotify -a Quicksilver -t Wordcount -m $out
+/usr/local/bin/growlnotify -a Quicksilver -t "Wordcount" -m "$out words"
 echo -n $out | pbcopy
-echo $out
