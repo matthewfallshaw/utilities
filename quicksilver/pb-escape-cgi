@@ -1,9 +1,0 @@
-#!/usr/bin/env ruby
-# CGI escape the contents of the OSX clipboard
-
-require File.join(File.dirname(__FILE__), "../lib/notify")
-
-require 'cgi'
-output = CGI.escape(IO.popen('pbpaste', 'r').read)
-IO.popen('pbcopy', 'w').print(output)
-notify(output)

@@ -1,4 +1,0 @@
-#!/bin/sh
-
-/opt/local/bin/pwgen -1 | tr -d \\n | pbcopy
-/usr/local/bin/growlnotify -a Quicksilver -m "Password generated"

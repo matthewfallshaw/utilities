@@ -1,8 +1,0 @@
-#!/usr/bin/env ruby
-# Un-Dasherize the clipboard on OSX
-
-require File.join(File.dirname(__FILE__), "../lib/notify")
-
-output = IO.popen('pbpaste', 'r').read.gsub(/[-_]/," ").gsub(/^ +| +$/,"")
-IO.popen('pbcopy', 'w').print(output)
-notify(output)

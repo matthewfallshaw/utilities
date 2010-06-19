@@ -1,8 +1,0 @@
-#!/usr/bin/env ruby
-# Upcase the contents of the OSX clipboard
-
-require File.join(File.dirname(__FILE__), "../lib/notify")
-
-output = IO.popen('pbpaste', 'r').read.upcase
-IO.popen('pbcopy', 'w').print(output)
-notify(output)

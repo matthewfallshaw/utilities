@@ -1,8 +1,0 @@
-#!/usr/bin/env ruby
-# Downcase the contents of the OSX clipboard
-
-require File.join(File.dirname(__FILE__), "../lib/notify")
-
-output = IO.popen('pbpaste', 'r').read.downcase
-IO.popen('pbcopy', 'w').print(output)
-notify(output)
