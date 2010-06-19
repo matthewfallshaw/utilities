@@ -1,11 +1,7 @@
 #!/usr/bin/env ruby
 # CGI escape the contents of the OSX clipboard
 
-def notify(message)
-  require 'shellwords'
-  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
-  message
-end
+require File.join(File.dirname(__FILE__), "../lib/notify")
 
 require 'cgi'
 output = CGI.escape(IO.popen('pbpaste', 'r').read)

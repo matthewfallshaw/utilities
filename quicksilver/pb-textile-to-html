@@ -6,11 +6,7 @@
 
 %w[rubygems redcloth].each {|l| require l }
 
-def notify(message)
-  require 'shellwords'
-  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
-  message
-end
+require File.join(File.dirname(__FILE__), "../lib/notify")
 
 clipboard = IO.popen('pbpaste', 'r').read
 output = RedCloth.new(clipboard).to_html

@@ -1,11 +1,7 @@
 #!/usr/bin/env ruby
 # Dasherize the clipboard on OSX
 
-def notify(message)
-  require 'shellwords'
-  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
-  message
-end
+require File.join(File.dirname(__FILE__), "../lib/notify")
 
 output = IO.popen('pbpaste', 'r').read.gsub(/[\W_]/,"-").gsub(/-+/,"-").gsub(/^-+|-+$/,"")
 IO.popen('pbcopy', 'w').print(output)

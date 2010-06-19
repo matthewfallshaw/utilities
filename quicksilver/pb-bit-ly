@@ -6,11 +6,7 @@
 clip_url = IO.popen('pbpaste', 'r').read
 output = ''
 
-def notify(message)
-  require 'shellwords'
-  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
-  message
-end
+require File.join(File.dirname(__FILE__), "../lib/notify")
 
 class BitlyError < Exception; end
 

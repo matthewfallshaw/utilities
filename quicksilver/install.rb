@@ -5,6 +5,8 @@
 #   "search_term": replace_term
 #   "other_search_term": other_replace_term
 
+IGNORE_LIST = %w[install.rb Rakefile README vendor lib bin]
+
 %w[shellwords rubygems rake yaml].each {|l| require l }
 
 def replace_file(file)
@@ -70,7 +72,7 @@ end
 if ARGV.empty?
   Dir.chdir File.dirname(__FILE__) do
     Dir['*'].each do |file|
-      next if %w[install.rb Rakefile README vendor bin].include?(file)
+      next if IGNORE_LIST.include?(file)
       replace(file)
     end
   end

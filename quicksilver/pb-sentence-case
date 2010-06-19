@@ -1,11 +1,7 @@
 #!/usr/bin/env ruby
 # Sentence caserize the contents of the OSX clipboard
 
-def notify(message)
-  require 'shellwords'
-  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
-  message
-end
+require File.join(File.dirname(__FILE__), "../lib/notify")
 
 output = IO.popen('pbpaste', 'r').read.downcase.sub(/^./) {|x| x.upcase }
 IO.popen('pbcopy', 'w').print(output)

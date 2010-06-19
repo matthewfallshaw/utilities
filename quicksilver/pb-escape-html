@@ -4,11 +4,7 @@
 
 %w[rubygems htmlentities].each {|l| require l }
 
-def notify(message)
-  require 'shellwords'
-  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
-  message
-end
+require File.join(File.dirname(__FILE__), "../lib/notify")
 
 output = HTMLEntities.encode_entities(IO.popen('pbpaste', 'r').read)
 IO.popen('pbcopy', 'w').print(output)

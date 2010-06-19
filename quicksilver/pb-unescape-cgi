@@ -3,11 +3,7 @@
 
 require 'cgi'
 
-def notify(message)
-  require 'shellwords'
-  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
-  message
-end
+require File.join(File.dirname(__FILE__), "../lib/notify")
 
 output = CGI.unescape(IO.popen('pbpaste', 'r').read)
 IO.popen('pbcopy', 'w').print(output)
