@@ -61,6 +61,8 @@ else
   abort "Unexpected arguments.\n#{opts}"
 end
 
+# Pull gitosis project
+`cd #{File.dirname(options.gitosis_conf)}; git pull origin master`
 inifile = IniFile.new(options.gitosis_conf)
 
 # Sanity checks
