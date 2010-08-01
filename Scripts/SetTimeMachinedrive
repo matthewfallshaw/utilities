@@ -1,5 +1,10 @@
 #!/usr/bin/env ruby
 
+# TODO: review this - http://www.macosxhints.com/article.php?story=2010051917410348
+#       esp. the bottom comment (which needs to be wrapped in
+#       `defaults write com.apple.TimeMachine AutoBackup -bool false` and
+#       `defaults write com.apple.TimeMachine AutoBackup -bool true``)
+
 %w[rubygems pathname fileutils active_support].each {|l| require l }
 require 'shellwords' rescue nil  # unimportant
 
