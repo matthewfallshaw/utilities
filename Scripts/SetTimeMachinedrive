@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+%w[rubygems pathname fileutils active_support].each {|l| require l }
+require 'shellwords' rescue nil  # unimportant
+
+LOCKFILE = Pathname.new(File.expand_path("~/tmp/.SetTimeMachinedriverunning"))
+TIME_MACHINE_VOLUMES = ["Time Machine", "Spare"]
+
+def running?
+  LOCKFILE.exist? && (LOCKFILE.ctime > Time.now.ago(10.seconds))
+end
+
+def first_available_time_machine_drive
+  TIME_MACHINE_VOLUMES.each do |volume|
+    path = Pathname.new("/Volumes/#{volume}/")
+    return volume if path.exist?
+  end
+  return nil
+end
+
+def should_change_drive?
+  first_available_time_machine_drive &&
+    (not current_time_machine_drive == first_available_time_machine_drive)
+end
+
+def current_time_machine_drive
+  uuid = `defaults read /Library/Preferences/com.apple.TimeMachine DestinationVolumeUUID`.chomp
+  path = `diskutil info #{uuid} | awk '/Mount Point/ {print $3}'`.chomp
+  path.sub(%r[^/Volumes/],'')
+end
+
+def notify(message)
+  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
+  message
+rescue
+  # it really doesn't matter if this doesn't work
+end
+
+begin
+  exit 0 if running?
+  FileUtils.touch(LOCKFILE)
+
+  if should_change_drive?
+    notify "#$0 is now trying to update your Time Machine drive to #{first_available_time_machine_drive}."
+    `osascript /Users/matt/dev/utils/Scripts/SetTimeMachinedrive.scpt`
+  else
+    notify "#$0 called, but decided not to do anything."
+  end
+ensure
+  LOCKFILE.unlink if LOCKFILE.exist?
+end
