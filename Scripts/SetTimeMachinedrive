@@ -9,7 +9,7 @@
 require 'shellwords' rescue nil  # unimportant
 
 LOCKFILE = Pathname.new(File.expand_path("~/tmp/.SetTimeMachinedriverunning"))
-TIME_MACHINE_VOLUMES = ["Time Machine", "Spare"]
+TIME_MACHINE_VOLUMES = ["TimeMachine", "Spare"]
 
 def running?
   LOCKFILE.exist? && (LOCKFILE.ctime > Time.now.ago(10.seconds))
