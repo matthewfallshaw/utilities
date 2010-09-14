@@ -1,2 +1,0 @@
-#!/bin/sh
-pwgen -1 | tr -d \\n | pbcopy

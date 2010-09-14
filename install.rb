@@ -4,7 +4,7 @@
 # (I took this from git://github.com/mislav/dotfiles.git)
 # modified to support secrets appended after install
 #   secrets in ~/.dotfiles_secrets like
-#   gitconfig:
+#   filename:
 #     "search_term": replace_term
 #     "other_search_term": other_replace_term
 
@@ -98,7 +98,6 @@ if ARGV.empty?
       process(file)
     end
   end
-  puts "I couldn't find anything to do." unless did_something
 else
   ARGV.each do |file|
     file = File.basename(file)
@@ -108,3 +107,4 @@ else
     process(file)
   end
 end
+puts "I couldn't find anything to do." unless did_something

@@ -1,3 +1,5 @@
 #!/opt/local/bin/ruby
-%w[rubygems activesupport].each {|l| require l }
-print Time.now.in(ARGV.first.to_i.days).strftime("%Y-%m-%d")
+%w[rubygems activesupport shellwords].each {|l| require l }
+date_string = Time.now.in(ARGV.first.to_i.days).strftime("%Y-%m-%d")
+`/usr/local/bin/growlnotify -a Quicksilver -m #{date_string.shellescape}`
+print date_string
