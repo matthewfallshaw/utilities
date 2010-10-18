@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+%w[rubygems crypt/blowfish termios].each {|l| require l}
+
+CryptFilename = "crypt.txt"
+PlainFilename = "plain.txt"
+Salt = "verysecretsalt"
+
+def get_pass(check = false)
+  oldt = Termios.tcgetattr($stdin)
+  newt = oldt.dup
+  newt.lflag &= ~Termios::ECHO
+  Termios.tcsetattr($stdin, Termios::TCSANOW, newt)
+  print "password> "
+  pass = $stdin.gets
+  if check
+    print "\nagain   > "
+    raise "Passwords didn't match. Exiting." unless pass == $stdin.gets
+  end
+  puts
+  return pass
+ensure
+  Termios.tcsetattr($stdin, Termios::TCSANOW, oldt)
+end
+
+def blowfish(check = false)
+  Crypt::Blowfish.new(Salt + get_pass(check))
+end
+
+mode, search = ARGV
+case mode
+when '-e', '-en'
+  raise "I can't find #{PlainFilename}" unless File.exist?(PlainFilename)
+  blowfish(true).encrypt_file(PlainFilename, CryptFilename)
+when '-d', '-de'
+  bf = blowfish()
+
+  raise "I can't find #{CryptFilename}" unless File.exist?(CryptFilename)
+  cryptFile = bf.carefully_open_file(CryptFilename, 'rb')
+  plainStream = StringIO.new('')
+  bf.decrypt_stream(cryptFile, plainStream)
+  cryptFile.close unless cryptFile.closed?
+
+  plainText = plainStream.string
+  puts plainText.grep(Regexp.new(search, Regexp::IGNORECASE))
+when '-f', '-file'
+  raise "I can't find #{CryptFilename}" unless File.exist?(CryptFilename)
+  blowfish.decrypt_file(CryptFilename, PlainFilename)
+else
+  s = File.basename($0)
+  puts <<USAGE
+usage: #{s} -(e)n         (encrypt #{PlainFilename} to #{CryptFilename})
+       #{s} -(d)e filter  (decrypt #{CryptFilename} and filter output)
+       #{s} -(f)ile       (decrypt #{CryptFilename} to #{PlainFilename})
+USAGE
+end
