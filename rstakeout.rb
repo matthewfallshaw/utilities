@@ -38,6 +38,12 @@
 #
 # See the PeepCode screencast on rSpec or other blog articles for instructions on
 # setting up growlnotify.
+#
+# == TODO
+#
+# http://github.com/ttilley/fssm looks like the good cheese - integrate it.
+# Gemify?
+#   (first review http://github.com/EdvardM/rstakeout/network)
 
 class Peeper
 
