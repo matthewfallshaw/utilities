@@ -47,7 +47,7 @@ begin
 
   if should_change_drive?
     notify "#$0 is now trying to update your Time Machine drive to #{first_available_time_machine_drive}."
-    `osascript /Users/matt/dev/utils/Scripts/SetTimeMachinedrive.scpt`
+    `osascript /Users/matt/code/utils/Scripts/SetTimeMachinedrive.scpt`
   else
     notify "#$0 called, but decided not to do anything."
   end
