@@ -3,16 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>com.matthewfallshaw.SetTimeMachineDrive</string>
+	<string>tech.inhelsinki.nl.locationchanger</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/Users/matt/dev/utils/Scripts/SetTimeMachinedrive</string>
+		<string>/Users/matt/bin/locationchanger</string>
 	</array>
 	<key>QueueDirectories</key>
 	<array/>
-	<key>StartOnMount</key>
-	<true/>
 	<key>WatchPaths</key>
-	<array/>
+	<array>
+		<string>/Library/Preferences/SystemConfiguration</string>
+	</array>
 </dict>
 </plist>
