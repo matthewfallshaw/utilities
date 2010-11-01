@@ -2,9 +2,17 @@
 # automatically change configuration of Mac OS X based on location
 # inspired by: http://tech.inhelsinki.nl/locationchanger/
 
-lockfile = File.join(ENV["HOME"],".locationchanger.lock")
-lockfile_age = (Time.now - File.mtime(lockfile))
-exit 1 if File.exist?(lockfile) && lockfile_age < 30
+require 'fileutils'
+
+def lockfile
+  file = File.join(ENV["HOME"],".locationchanger.lock")
+  FileUtils.touch(file, :mtime => Time.utc(2000, 1, 1)) unless File.exist?(lockfile)
+  file
+end
+def lockfile_age
+  Time.now - File.mtime(lockfile)
+end
+exit 1 if lockfile_age < 30
 
 def file
   @file ||= begin
@@ -25,11 +33,11 @@ begin
   if location_detector.moved?
     case location_detector.location
     when "Canning"
-      `/Users/matt/dev/utils/Scripts/Set\\ Time\\ Machine\\ drive.sh`
+      `/Users/matt/code/utils/Scripts/Set\\ Time\\ Machine\\ drive.sh`
       # turn airport on
       # networksetup -setairportpower en1 on
     when "Trike"
-      `/Users/matt/dev/utils/Scripts/Set\\ Time\\ Machine\\ drive.sh`
+      `/Users/matt/code/utils/Scripts/Set\\ Time\\ Machine\\ drive.sh`
       # turn airport off
       # `networksetup -setairportpower en1 off` if location_detector.airport_power?
     when "Prior"
