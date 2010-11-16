@@ -9,9 +9,9 @@
   RewriteRule ^(.*)$ ${test_map:$1} [R=permanent,L]
   Include /Users/matt/apache2/virtualhosts/test/rewriterules.txt
 
-  DocumentRoot /Users/matt/tmp/virtualhost/
+  DocumentRoot /Users/matt/tmp/test.local/
 </VirtualHost>
-<Directory "/Users/matt/tmp/virtualhost/">
+<Directory "/Users/matt/tmp/test.local/">
   Options Indexes MultiViews
   AllowOverride None
   Order allow,deny
