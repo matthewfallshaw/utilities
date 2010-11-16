@@ -29,9 +29,17 @@ def should_change_drive?
 end
 
 def current_time_machine_drive
-  uuid = `defaults read /Library/Preferences/com.apple.TimeMachine DestinationVolumeUUID`.chomp
-  path = `diskutil info #{uuid} | awk '/Mount Point/ {print $3}'`.chomp
+  path = `diskutil info #{current_time_machine_drive_uuid} | awk '/Mount Point/ {print $3}'`.chomp
   path.sub(%r[^/Volumes/],'')
+end
+
+def current_time_machine_drive_uuid
+  valid_uuid = /^([A-Z\d]+-)+[A-Z\d]+$/
+  %w[DestinationUUID DestinationVolumeUUID].each do |trying|
+    uuid = `defaults read /Library/Preferences/com.apple.TimeMachine #{trying}`.chomp
+    return uuid if uuid.match(valid_uuid)
+  end
+  raise "Can't read TimeMachine drive from preferences file"
 end
 
 def notify(message)
