@@ -74,7 +74,8 @@ esac
 # not; we work around this when this script is invoked as "gvim" or "rgview"
 # etc., but not when it is invoked as "vim -g".
 if [ "$remote" ]; then
-	exec "$binary" $opts "--remote-tab-silent" ${1:+"$@"}
+	args=`getopt -ul noplugin,cmd:,remote:,remote-silent:,remote-wait:,remote-wait-silent:,remote-tab:,remote-tab-wait:,remote-tab-wait-silent:,remote-send:,remote-expr:,serverlist,servername:,startuptime:,help,version,remote-tab-silent gfvesdyRZmMblCNV::DnrLAHFT:u:U:p::o::O::c:S:s:w:W:xi:h $*`
+    exec "$binary" $opts ${args/--/--remote-tab-silent}
 else
 	exec "$binary" $opts ${1:+"$@"}
 fi
