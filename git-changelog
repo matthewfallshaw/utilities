@@ -12,6 +12,7 @@ cmd.each do |l|
   date, time, zone = date.split(" ")
  
   id = "#{date}"
+  # id = "#{date}\t#{author}"
   if not list[id]
     list[id] = []
     list_order << {:id => id, :value => list[id]}
