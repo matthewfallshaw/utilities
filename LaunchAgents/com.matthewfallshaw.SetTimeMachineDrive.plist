@@ -6,8 +6,7 @@
 	<string>com.matthewfallshaw.SetTimeMachineDrive</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>osascript</string>
-		<string>/Users/matt/dev/utils/Scripts/SetTimeMachinedrive.scpt</string>
+		<string>/Users/matt/dev/utils/Scripts/SetTimeMachinedrive</string>
 	</array>
 	<key>QueueDirectories</key>
 	<array/>

@@ -1,0 +1,21 @@
+# Permanent
+RewriteRule ^/tmol-faq/(.*)/(.*).html /obsolete/tmol-faq.html#$1_$2 [NE,R=301,L]
+RewriteRule ^/tmol-faq/(.*?)(?:.ext)?.html /obsolete/tmol-faq.html#$1 [NE,R=301,L]
+RewriteRule ^/obsolete/logic.ext.html$ /obsolete/tmol-faq.html#logic [NE,R=301,L]
+RewriteRule ^/(?:obsolete|sing|obsolete/sing)/(?:PtS|sing)(?:.xml)?/(?:PtS.parts/)?(.*)/(.*)/(.*).html /obsolete/plan.html#$1_$2_$3 [NE,R=301,L]
+RewriteRule ^/(?:obsolete|sing|obsolete/sing)/(?:PtS|sing)(?:.xml)?/(?:PtS.parts/)?(.*)/(.*).html /obsolete/plan.html#$1_$2 [NE,R=301,L]
+RewriteRule ^/(?:obsolete|sing|obsolete/sing)/(?:PtS|sing)(?:.xml)?/(?:PtS.parts/)?(.*) /obsolete/plan.html#$1 [NE,R=301,L]
+RewriteRule ^/sing(?:ularitarian)?/ /obsolete/plan.html [R=301,L]
+RewriteRule ^/bayes/(.*)\.(png|jpeg) /assets/images/$1.$2 [R=301,L]
+RewriteRule ^/fiction/(.*) /other/fiction/$1 [R=301,L]
+RewriteRule ^/archive-sl4/(.*) http://sl4.org/archive/$1 [R=301,L]
+# Gone
+RewriteRule ^/eliezer.html$ - [G,L]
+RewriteRule ^/AI_design.temp.html$ - [G,L]
+RewriteRule ^/(?:obsolete/)?beyond(?:.html)?$ - [G,L]
+RewriteRule ^/(?:obsolete/)?shocklevels(?:.html)?$ - [G,L]
+RewriteRule ^/essays/lovelife.html$ - [G,L]
+RewriteRule ^/workarounds.html$ - [G,L]
+# Don't ask
+Redirect 404 /favicon.ico
+Redirect 404 /favicon.gif

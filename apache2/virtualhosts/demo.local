@@ -1,0 +1,10 @@
+<VirtualHost *:80>  
+   ServerName demo.local
+   DocumentRoot /Users/matt/tmp/demo.local
+</VirtualHost>
+<Directory "/Users/matt/tmp/demo.local">
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>

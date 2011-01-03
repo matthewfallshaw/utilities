@@ -6,7 +6,7 @@
 	<string>com.matthewfallshaw.KeepTimeMachineSpinning</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/Users/matt/dev/utils/LaunchAgents/keepnotnuxspinning</string>
+		<string>/Users/matt/dev/utils/LaunchAgents/keeptimemachinespinning</string>
 	</array>
 	<key>StartInterval</key>
 	<integer>240</integer>
