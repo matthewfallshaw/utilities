@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'yaml'
 
-cals = YAML.load(File.open("backup-google-cals.yaml")).collect {|c| c.first }
+cals = YAML.load(File.open(File.expand_path("~/.dotfiles_secrets")))["calendars"].collect {|c| c.first }
 
 Dir.chdir("/Users/matt/Dropbox/Archive/calendars")
 
