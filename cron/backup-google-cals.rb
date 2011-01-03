@@ -1,18 +1,13 @@
 #!/usr/bin/env ruby
+require 'yaml'
+
+cals = YAML.load(File.open("backup-google-cals.yaml"))
+
 Dir.chdir("/Volumes/Internal/Dropbox/Archive/calendars")
 
 # Backup
 threads = []
-[
-%w[matthewfallshaw matthew.fallshaw%40gmail.com/private-498f1b544e3bc3cef0b79fd518788d65/basic.ics],
-%w[investling      gvjvijca7f17u6gooad1880940%40group.calendar.google.com/private-427ab63f74e186d04db3b6549e4f7231/basic.ics],
-%w[trikeapps       5o40b9riv84niiuii69hh893t8%40group.calendar.google.com/private-63ea807d17fafff496d48d927ea268a4/basic.ics],
-%w[trikeappsshared dnv17juvgme52i520fj9pahf6g%40group.calendar.google.com/private-5ecb23fc0789d0990e701d8692927f36/basic.ics],
-%w[trikemtgrm      fjch0inl5i4uqjs8t1kvqaoduk%40group.calendar.google.com/private-f716d7754e07965b8fe68912ba7a9917/basic.ics],
-%w[dogs            rtnvb087tie99gjst23jt0gots%40group.calendar.google.com/private-bad1f35cf5711cc9c3d34194da7008c0/basic.ics],
-%w[fallabria       orflrfrai5561vetnhfrh0c7f0%40group.calendar.google.com/private-c3b6ecac4e35c0492f478b3b4af91654/basic.ics],
-%w[lina            lina.calabria%40gmail.com/private-fa406a78ae451dfb863ca4ec593ad4a3/basic.ics],
-].each do |file, addr|
+cals.each do |file, addr|
   threads << Thread.new(file, addr) do |file, addr|
     `wget --quiet http://www.google.com/calendar/ical/#{addr} -O #{file}.ics`
   end
