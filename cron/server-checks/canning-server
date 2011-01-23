@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+%w[rubygems rspec].each {|l| require l }
+
+FIXTURE = {
+  :ip => "192.168.42.40",
+  :hostname => "canning-server.local",
+}
+
+describe "canning-server" do
+  it "should have IP address #{FIXTURE[:ip]}" do
+    system("ifconfig | grep -q #{FIXTURE[:ip]}").should be_true
+  end
+  it "should have hostname #{FIXTURE[:hostname]}" do
+    system("[ `ssh #{FIXTURE[:ip]} hostname` = #{FIXTURE[:hostname]} ]").should be_true
+  end
+end
+
+__END__
+#!/bin/sh
+
+# IP Address
+ifconfig | grep -q 192.168.42.40  &&
+
+# Hostname
+[ `ssh 192.168.42.40 hostname` = canning-server.local ]
