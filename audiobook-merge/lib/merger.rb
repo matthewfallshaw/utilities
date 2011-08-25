@@ -1,3 +1,5 @@
+require 'shellwords'
+
 class Merger
   
   def initialize(name, *files)
@@ -12,7 +14,7 @@ class Merger
   attr_reader :name
   
   def files=(list)
-    @files = list
+    @files = list.collect {|f| f.shellescape }
     files_okay?
   end
   attr_reader :files
