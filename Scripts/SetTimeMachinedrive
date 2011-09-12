@@ -1,10 +1,5 @@
 #!/usr/bin/env ruby
 
-# TODO: review this - http://www.macosxhints.com/article.php?story=2010051917410348
-#       esp. the bottom comment (which needs to be wrapped in
-#       `defaults write com.apple.TimeMachine AutoBackup -bool false` and
-#       `defaults write com.apple.TimeMachine AutoBackup -bool true``)
-
 %w[rubygems pathname fileutils active_support].each {|l| require l }
 require 'shellwords' rescue nil  # unimportant
 
@@ -15,6 +10,13 @@ def running?
   LOCKFILE.exist? && (LOCKFILE.ctime > Time.now.ago(10.seconds))
 end
 
+def notify(message)
+  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
+  message
+rescue
+  # it really doesn't matter if this doesn't work
+end
+
 def first_available_time_machine_drive
   TIME_MACHINE_VOLUMES.each do |volume|
     path = Pathname.new("/Volumes/#{volume}/")
@@ -23,41 +25,49 @@ def first_available_time_machine_drive
   return nil
 end
 
-def should_change_drive?
+def should_run?
   first_available_time_machine_drive &&
-    (not current_time_machine_drive == first_available_time_machine_drive)
+    ( latest_backup_drive != first_available_time_machine_drive )
+#     (current_time_machine_drive != first_available_time_machine_drive)
 end
 
-def current_time_machine_drive
-  path = `diskutil info #{current_time_machine_drive_uuid} | awk '/Mount Point/ {print $3}'`.chomp
-  path.sub(%r[^/Volumes/],'')
+# def current_time_machine_drive
+#   path = `diskutil info #{current_time_machine_drive_uuid} | awk '/Mount Point/ {print $3}'`.chomp
+#   path.sub(%r[^/Volumes/],'')
+# end
+
+# def current_time_machine_drive_uuid
+#   valid_uuid = /^([A-Z\d]+-)+[A-Z\d]+$/
+#   %w[DestinationUUID DestinationVolumeUUID DestinationVolumeUUIDs].each do |trying|
+#     uuid = `defaults read /Library/Preferences/com.apple.TimeMachine #{trying}`.chomp
+#     return uuid if uuid.match(valid_uuid)
+#   end
+#   raise "Can't read TimeMachine drive from preferences file"
+# end
+
+def latest_backup_drive
+  File.basename(`tmutil latestbackup`.sub(%r{/Backups.backupdb.*},'').chomp)
 end
 
-def current_time_machine_drive_uuid
-  valid_uuid = /^([A-Z\d]+-)+[A-Z\d]+$/
-  %w[DestinationUUID DestinationVolumeUUID].each do |trying|
-    uuid = `defaults read /Library/Preferences/com.apple.TimeMachine #{trying}`.chomp
-    return uuid if uuid.match(valid_uuid)
-  end
-  raise "Can't read TimeMachine drive from preferences file"
+def change_drive
+  notify "#$0 is now trying to update your Time Machine drive to #{first_available_time_machine_drive}."
+  `sudo tmutil setdestination /Volumes/#{first_available_time_machine_drive}`
+#   `osascript /Users/matt/code/utils/Scripts/SetTimeMachinedrive.scpt`
 end
 
-def notify(message)
-  `/usr/local/bin/growlnotify -a Quicksilver -m #{message.shellescape}`
-  message
-rescue
-  # it really doesn't matter if this doesn't work
+def run
+  `tmutil startbackup`
 end
 
 begin
   exit 0 if running?
   FileUtils.touch(LOCKFILE)
 
-  if should_change_drive?
-    notify "#$0 is now trying to update your Time Machine drive to #{first_available_time_machine_drive}."
-    `osascript /Users/matt/code/utils/Scripts/SetTimeMachinedrive.scpt`
+  change_drive
+  if should_run?
+    run
   else
-    notify "#$0 called, but decided not to do anything."
+    notify "#$0 called, but decided not to trigger a backup."
   end
 ensure
   LOCKFILE.unlink if LOCKFILE.exist?
