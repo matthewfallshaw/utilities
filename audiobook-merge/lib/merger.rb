@@ -1,10 +1,11 @@
 require 'shellwords'
+require 'pathname'
 
 class Merger
   
   def initialize(name, *files)
     self.name = name
-    self.files = files.flatten
+    self.files = files
     self
   end
   
@@ -14,7 +15,7 @@ class Merger
   attr_reader :name
   
   def files=(list)
-    @files = list.collect {|f| f.shellescape }
+    @files = list.flatten.collect {|f| Pathname.new(f) }
     files_okay?
   end
   attr_reader :files
@@ -58,7 +59,7 @@ class Merger
   
   def files_okay?
     missing_files = files.reject do |file|
-      File.exist?(file) && File.directory?(file) == false && File.extname(file) == ".mp3"
+      file.exist? && file.directory? == false && file.extname == ".mp3"
     end
     unless missing_files.empty?
       raise(ArgumentError, "Missing files: #{missing_files.inspect}")
