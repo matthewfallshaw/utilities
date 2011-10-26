@@ -1,3 +1,0 @@
-#!/usr/bin/env ruby
-Dir.chdir "/Users/matt/code/podshifter"
-exec "echo `date` - `cap production shifter:queue:size -q` >> /Users/matt/.podshifterqueue.log"
