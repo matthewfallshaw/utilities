@@ -28,22 +28,7 @@ end
 def should_run?
   first_available_time_machine_drive &&
     ( latest_backup_drive != first_available_time_machine_drive )
-#     (current_time_machine_drive != first_available_time_machine_drive)
 end
-
-# def current_time_machine_drive
-#   path = `diskutil info #{current_time_machine_drive_uuid} | awk '/Mount Point/ {print $3}'`.chomp
-#   path.sub(%r[^/Volumes/],'')
-# end
-
-# def current_time_machine_drive_uuid
-#   valid_uuid = /^([A-Z\d]+-)+[A-Z\d]+$/
-#   %w[DestinationUUID DestinationVolumeUUID DestinationVolumeUUIDs].each do |trying|
-#     uuid = `defaults read /Library/Preferences/com.apple.TimeMachine #{trying}`.chomp
-#     return uuid if uuid.match(valid_uuid)
-#   end
-#   raise "Can't read TimeMachine drive from preferences file"
-# end
 
 def latest_backup_drive
   File.basename(`tmutil latestbackup`.sub(%r{/Backups.backupdb.*},'').chomp)
@@ -52,7 +37,6 @@ end
 def change_drive
   notify "#$0 is now trying to update your Time Machine drive to #{first_available_time_machine_drive}."
   `sudo tmutil setdestination /Volumes/#{first_available_time_machine_drive}`
-#   `osascript /Users/matt/code/utils/Scripts/SetTimeMachinedrive.scpt`
 end
 
 def run
