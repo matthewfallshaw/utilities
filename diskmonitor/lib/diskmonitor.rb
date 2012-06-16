@@ -24,11 +24,19 @@ class DiskMonitor
     `diskutil info #{disk}`.chomp
   end
 
+  def self.email_address
+    `whoami`.chomp
+  end
+  def self.email_address=(e)
+    def email_address; e; end
+  end
+
   def self.mail_problematic_drives
     if problematic_drives.empty?
-      exit 0
+      puts "All drives okay."
     else
-      send_email(`whoami`.chomp,
+      puts "Problems with #{ problematic_drives.join(", ") }; mailing report to #{email_address}."
+      send_email(email_address,
                  :subject => "#{`hostname`.chomp}: #{problematic_drives.join(",")} SMART status problematic",
                  :body => <<BODY
 SMART status problematic with #{problematic_drives.size > 1 ? "drives #{problematic_drives.join(", ")}" : "drive #{problematic_drives.first}"}
