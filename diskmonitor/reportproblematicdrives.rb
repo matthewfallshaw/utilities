@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
-require_relative 'lib/diskmonitor'
+begin
+  require_relative 'lib/diskmonitor'
+rescue
+  require File.join(File.dirname(__FILE__), "lib", "diskmonitor")
+end
 
 DiskMonitor.mail_problematic_drives
