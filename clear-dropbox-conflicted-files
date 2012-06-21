@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+conflicts = `find /Volumes/Internal/Dropbox/ -name '*s conflicted copy*' | grep -v '.dropbox'`.split("\n")
+removed = []
+conflicts.each do |f|
+  begin
+    removed << f if File.delete f
+  rescue
+    STDERR.puts "Successfully removed conflicted copies:\n", removed.join(", ") unless removed.empty?
+    STDERR.puts "Couldn't remove file: #{f}"
+    exit 1
+  end
+end
+
+if removed.empty?
+  puts "No conflicted copies found."
+else
+  puts "Removed conflicted copies:\n", removed.join(", ")
+end
