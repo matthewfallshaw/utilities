@@ -1,19 +1,48 @@
 #!/usr/bin/env ruby
 
-conflicts = `find /Volumes/Internal/Dropbox/ -name '*s conflicted copy*' | grep -v '.dropbox'`.split("\n")
-removed = []
+%w[rubygems optparse ostruct].each {|l| require l }
+
+options = OpenStruct.new
+opts = OptionParser.new do |o|
+  o.on('-e', '--exclude REGEXP',
+       "exclude files matching REGEXP") do |pattern|
+    begin
+      options.exclude = Regexp.new(pattern)
+    rescue RegexpError
+      STDERR.puts "#{$0}: can't make a Regular Expression from '#{pattern}' - aborting"
+      exit 1
+    end
+  end
+  o.on('-q', '--quiet', "be quiet") do
+    options.quiet = true
+  end
+  o.on('-h', "this help text") { puts o; exit }
+  o.parse!
+end
+
+
+conflicts = `find /Volumes/Internal/Dropbox -name '*s conflicted copy*' | grep -v '.dropbox'`.split("\n")
+log = {:removed => [], :ignored => []}
 conflicts.each do |f|
   begin
-    removed << f if File.delete f
-  rescue
+    if options.exclude.match(f) then
+      log[:ignored] << f
+    elsif File.delete(f)
+      log[:removed] << f
+    end
+  rescue => e
     STDERR.puts "Successfully removed conflicted copies:\n", removed.join(", ") unless removed.empty?
     STDERR.puts "Couldn't remove file: #{f}"
+    STDERR.puts e
     exit 1
   end
 end
 
-if removed.empty?
-  puts "No conflicted copies found."
+# Report
+exit if options.quiet
+if log[:removed].empty? && log[:ignored].empty?
+  puts "No conflicted copies found"
 else
-  puts "Removed conflicted copies:\n", removed.join(", ")
+  puts (["Ignored conflicted copies:"] + log[:ignored]).join("\n  ") unless log[:ignored].empty?
+  puts (["Removed conflicted copies:"] + log[:removed]).join("\n  ") unless log[:removed].empty?
 end
