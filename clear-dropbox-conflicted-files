@@ -25,13 +25,13 @@ conflicts = `find /Volumes/Internal/Dropbox -name '*s conflicted copy*' | grep -
 log = {:removed => [], :ignored => []}
 conflicts.each do |f|
   begin
-    if options.exclude.match(f) then
+    if options.exclude && options.exclude.match(f) then
       log[:ignored] << f
     elsif File.delete(f)
       log[:removed] << f
     end
   rescue => e
-    STDERR.puts "Successfully removed conflicted copies:\n", removed.join(", ") unless removed.empty?
+    STDERR.puts "Successfully removed conflicted copies:\n", log[:removed].join(", ") unless log[:removed].empty?
     STDERR.puts "Couldn't remove file: #{f}"
     STDERR.puts e
     exit 1
