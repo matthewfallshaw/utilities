@@ -3,7 +3,7 @@ require 'yaml'
 
 cals = YAML.load(File.open(File.expand_path("~/.dotfiles_secrets")))["calendars"]
 
-Dir.chdir("/Volumes/Internal/Dropbox/Archive/calendars")
+Dir.chdir(File.expand_path("~/Dropbox/Archive/calendars"))
 
 # Backup
 threads = []
