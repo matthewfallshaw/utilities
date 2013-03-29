@@ -14,15 +14,14 @@ cals.each do |file, addr|
 end
 threads.each { |t| t.join }
 
-# Check that the check is happening
-
 def weekday?
-  %w[Sat Sun].include?(Time.now.strftime("%a"))
+  not %w[Sat Sun].include?(Time.now.strftime("%a"))
 end
 def old?(file)
   (Time.now - file.mtime) > (2 * 24 * 60 * 60)
 end
 
+# Check that the check is happening
 require 'pathname'
 checkfile = Pathname.new("ics-checked")
 if not(checkfile.exist?) || (weekday? && old?(checkfile))
@@ -32,4 +31,6 @@ if not(checkfile.exist?) || (weekday? && old?(checkfile))
   else
     warn "Problem: iCal backup script ran okay, but I can't find the file that should be left by the script that checks that this script is running, which may indicate that the check script isn't running"
   end
+else
+  system 'curl -d "m=ran without issues at $(date)" https://nosnch.in/d7533ba1ca &> /dev/null'
 end
