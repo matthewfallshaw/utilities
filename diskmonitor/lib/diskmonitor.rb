@@ -5,7 +5,7 @@ require 'net/smtp'
 
 class DiskMonitor
   def self.drives
-    list = `diskutil list | grep '^/dev/disk'`.chomp
+    list = `/usr/sbin/diskutil list | grep '^/dev/disk'`.chomp
     list.split.collect {|x| x[/(disk.+)/,1]}
   end
 
@@ -21,7 +21,7 @@ class DiskMonitor
   end
 
   def self.info(disk)
-    `diskutil info #{disk}`.chomp
+    `/usr/sbin/diskutil info #{disk}`.chomp
   end
 
   def self.email_address
@@ -80,4 +80,4 @@ SYSTEM
 end
 
 __END__
-for disk in `diskutil list | grep '^/dev/disk'`; do (diskutil info $disk | grep -P 'SMART.*          >(Verified|Not Supported)' || (echo "Problem:\n$(diskutil info $disk | grep SMART)\n\nFull Report:\n$(diskutil     >info $disk)" | mail -s "$(hostname): $disk SMART status problematic" $(whoami))); done
+for disk in `/usr/sbin/diskutil list | grep '^/dev/disk'`; do (/usr/sbin/diskutil info $disk | grep -P 'SMART.*          >(Verified|Not Supported)' || (echo "Problem:\n$(/usr/sbin/diskutil info $disk | grep SMART)\n\nFull Report:\n$(/usr/sbin/diskutil     >info $disk)" | mail -s "$(hostname): $disk SMART status problematic" $(whoami))); done
