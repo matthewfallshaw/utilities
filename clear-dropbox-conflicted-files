@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
-if File.directory?("/Volumes/Internal/Dropbox")
-  DROPBOX = "/Volumes/Internal/Dropbox"
-elsif File.directory?(File.expand_path("~/Dropbox"))
-  DROPBOX = File.expand_path("~/Dropbox")
+if File.directory?("/Volumes/Internal/Dropbox*")
+  DROPBOX = "/Volumes/Internal/Dropbox*"
+elsif File.directory?(File.expand_path("~/Dropbox*"))
+  DROPBOX = File.expand_path("~/Dropbox*")
 else
   raise "Can't find your Dropbox folder, sorry."
 end
