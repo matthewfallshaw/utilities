@@ -25,11 +25,10 @@ end
 require 'pathname'
 checkfile = Pathname.new("ics-checked")
 if not(checkfile.exist?) || (weekday? && old?(checkfile))
-  require 'rubygems'; require 'action_view'; include ActionView::Helpers::DateHelper
   if checkfile.exist?
-    warn "Problem: iCal backup script ran okay, but the script that checks that this script is running hasn't run for #{distance_of_time_in_words_to_now(checkfile.mtime)}"
+    warn "Problem: Calendar backup script ran okay, but the script that checks that this script is running hasn't run for #{((Time.now - checkfile.mtime) / (60*60*24)).round(0)} days."
   else
-    warn "Problem: iCal backup script ran okay, but I can't find the file that should be left by the script that checks that this script is running, which may indicate that the check script isn't running"
+    warn "Problem: Calendar backup script ran okay, but I can't find the file that should be left by the script that checks that this script is running, which may indicate that the check script isn't running"
   end
 else
   system 'curl -d "m=ran without issues at $(date)" https://nosnch.in/d7533ba1ca &> /dev/null'
