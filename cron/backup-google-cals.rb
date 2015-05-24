@@ -18,7 +18,7 @@ def weekday?
   not %w[Sat Sun].include?(Time.now.strftime("%a"))
 end
 def old?(file)
-  (Time.now - file.mtime) > (2 * 24 * 60 * 60)
+  (Time.now - file.mtime) > (3 * 24 * 60 * 60)
 end
 
 # Check that the check is happening

@@ -9,7 +9,7 @@ def weekday?
   not %w[Sat Sun].include?(Time.now.strftime("%a"))
 end
 def old?(file)
-  (Time.now - File.mtime(file)) > (2 * 24 * 60 * 60)
+  (Time.now - File.mtime(file)) > (3 * 24 * 60 * 60)
 end
 
 `date > ics-checked`
