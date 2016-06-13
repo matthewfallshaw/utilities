@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+Dir.chdir(File.dirname($0))
+`/usr/local/bin/wemo clear`
+switches = `wemo list`.split(/\n/).collect {|s| s[/Switch: (Office.*)/,1]}.select{|s| not s.nil?}
+switches.each do |switch|
+  puts switch
+  `/usr/local/bin/wemo switch "#{switch}" off`
+end
