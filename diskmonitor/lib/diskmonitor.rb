@@ -6,7 +6,7 @@ require 'net/smtp'
 class DiskMonitor
   def self.drives
     list = `/usr/sbin/diskutil list | grep '^/dev/disk'`.chomp
-    list.split.collect {|x| x[/(disk.+)/,1]}
+    list.split.collect {|x| x[/(disk.+)/,1]}.compact
   end
 
   def self.problematic_drives
@@ -15,13 +15,13 @@ class DiskMonitor
     end
   end
 
-  def self.status(disk)
-    s = info(disk).split("\n").grep(/SMART Status:/).first
+  def self.status(drive)
+    s = info(drive).split("\n").grep(/SMART Status:/).first
     s[/SMART Status:\s+(.+)/,1]
   end
 
-  def self.info(disk)
-    `/usr/sbin/diskutil info #{disk}`.chomp
+  def self.info(drive)
+    `/usr/sbin/diskutil info #{drive}`.chomp
   end
 
   def self.email_address
