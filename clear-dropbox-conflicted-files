@@ -1,12 +1,8 @@
 #!/usr/bin/env ruby
 
-if File.directory?("/Volumes/Internal/Dropbox*")
-  DROPBOX = "/Volumes/Internal/Dropbox*"
-elsif File.directory?(File.expand_path("~/Dropbox*"))
-  DROPBOX = File.expand_path("~/Dropbox*")
-else
-  raise "Can't find your Dropbox folder, sorry."
-end
+DROPBOX = "~/Dropbox*"
+raise "Can't find your Dropbox folder, sorry." if Dir[File.expand_path(DROPBOX)].empty?
+COMMAND = "find #{DROPBOX} -name '.dropbox.cache' -prune -or -name '*s conflicted copy*' -print"
 
 %w[rubygems optparse ostruct].each {|l| require l }
 
@@ -29,8 +25,8 @@ opts = OptionParser.new do |o|
 end
 
 
-puts "find #{DROPBOX} -name '.dropbox.cache' -prune -or -name '*s conflicted copy*' -print"
-conflicts = `find #{DROPBOX} -name ".dropbox.cache" -prune -or -name '*s conflicted copy*' -print`.split("\n")
+puts COMMAND
+conflicts = `#{COMMAND}`.split("\n")
 log = {:removed => [], :ignored => []}
 conflicts.each do |f|
   begin
