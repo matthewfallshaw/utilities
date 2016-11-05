@@ -1,9 +1,0 @@
-#! /bin/sh
-# hide an application
-osascript <<END
-  tell application "System Events"
-    if exists application process "$1" then
-      set visible of application process "$1" to false
-    end if
-  end tell
-END

@@ -1,6 +1,3 @@
-[submodule "github-vim"]
-	path = github-vim
-	url = git://github.com/solars/github-vim.git
 [submodule "Scripts/Make-symlink.app"]
 	path = Scripts/Make-symlink.app
 	url = git@github.com:matthewfallshaw/Make-symlink.app.git
