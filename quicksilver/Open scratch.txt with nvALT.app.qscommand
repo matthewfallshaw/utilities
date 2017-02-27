@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>command</key>
+	<dict>
+		<key>class</key>
+		<string>QSCommand</string>
+		<key>data</key>
+		<dict>
+			<key>qs.command</key>
+			<dict>
+				<key>actionID</key>
+				<string>FileOpenWithAction</string>
+				<key>directID</key>
+				<string>/Users/matt/Dropbox (Personal)/Library/Application Support/Notational Data/scratch.txt</string>
+				<key>indirectID</key>
+				<string>/Applications/nvALT.app</string>
+			</dict>
+		</dict>
+		<key>properties</key>
+		<dict>
+			<key>QSObjectType</key>
+			<string>qs.command</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
