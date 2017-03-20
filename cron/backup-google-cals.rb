@@ -8,8 +8,8 @@ Dir.chdir(File.expand_path("~/Dropbox/Archive/calendars"))
 # Backup
 threads = []
 cals.each do |file, addr|
-  threads << Thread.new(file, addr) do |file, addr|
-    `wget --quiet http://www.google.com/calendar/ical/#{addr} -O #{file}.ics`
+  threads << Thread.new(file, addr) do |f, a|
+    `/usr/local/bin/wget --quiet http://www.google.com/calendar/ical/#{a} -O #{f}.ics`
   end
 end
 threads.each { |t| t.join }
