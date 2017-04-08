@@ -8,11 +8,13 @@ task :install_actions
 Dir["*.scpt"].each do |action|
   actiondir = File.expand_path("~/Library/Application\ Support/Quicksilver/Actions/")
   actionfile = File.join(actiondir, action)
-  desc action
   file actionfile => action do
     mkdir_p actiondir
     cp action, actiondir
   end
   task install_actions: actionfile
+
+  desc "file #{actionfile} => #{action}"
+  task File.basename(action, ".*") => actionfile
 end
 
