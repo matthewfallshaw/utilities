@@ -1,4 +1,0 @@
-#!/bin/bash
-WEMOSWITCH="Alex room"
-SWITCHSTATE=On
-/usr/local/bin/wemo switch "$WEMOSWITCH" $SWITCHSTATE || /usr/local/bin/wemo clear && /usr/local/bin/wemo switch "$WEMOSWITCH" $SWITCHSTATE
