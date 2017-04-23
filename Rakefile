@@ -55,13 +55,16 @@ UTILS.each do |script|
   file binfile => scriptfile do
     puts "## #{script}"
     mkdir_p BINDIR
-    cp scriptfile, binfile
-    system %Q{chmod u+x "#{binfile}"}
     if secrets[scriptfile_base]
+      cp scriptfile, binfile
+      system %Q{chmod u+x "#{binfile}"}
       secrets[scriptfile_base].each do |search_term, replace_term|
         system %[ruby -pi -e 'gsub(/#{Shellwords.escape(search_term)}/, "#{Shellwords.escape(replace_term)}")' "#{binfile}"]
       end
       puts "… and secrets replaced in #{script}"
+    else
+      ln_s scriptfile, binfile
+      system %Q{chmod u+x "#{scriptfile}"}
     end
     puts
   end
