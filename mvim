@@ -7,11 +7,13 @@
 #
 # Based on a script by Wout Mertens and suggestions from Laurent Bihanic.  This
 # version is the fault of Benji Fisher, 16 May 2005 (with modifications by Nico
-# Weber and Bjorn Winckler, Aug 13 2007).
+# Weber and Bjorn Winckler, Aug 13 2007). Further modifications adapted from
+# shakefu (https://gist.github.com/shakefu/3780676).
+# 
 # First, check "All the Usual Suspects" for the location of the Vim.app bundle.
 # You can short-circuit this by setting the VIM_APP_DIR environment variable
 # or by un-commenting and editing the following line:
-if [ -L $0 ]; then VIM_APP_DIR=`dirname "$(readlink $0)"`/../../..; else VIM_APP_DIR=`dirname "$0"`/../../..; fi
+# if [ -L $0 ]; then VIM_APP_DIR=`dirname "$(readlink $0)"`/../../..; else VIM_APP_DIR=`dirname "$0"`/../../..; fi
 
 if [ -z "$VIM_APP_DIR" ]
 then
@@ -49,6 +51,8 @@ binary="$VIM_APP_DIR/MacVim.app/Contents/MacOS/Vim"
 name="`basename "$0"`"
 gui=
 opts=
+stdin=false
+diffmode=false
 
 # GUI mode, implies forking
 case "$name" in m*|g*|rm*|rg*) gui=true ;; esac
@@ -74,16 +78,38 @@ case "$name" in
 		;;
 esac
 
+# Preserve command line options lazily
+while [ -n "$1" ]; do
+    case $1 in 
+        -d) diffmode=true; shift;;
+        -?*) opts="$opts $1"; shift;;
+        -) stdin=true; break;;
+        *) echo "*"; break;; 
+    esac
+done
+
 # Last step:  fire up vim.
 # The program should fork by default when started in GUI mode, but it does
 # not; we work around this when this script is invoked as "gvim" or "rgview"
 # etc., but not when it is invoked as "vim -g".
 if [ "$gui" ]; then
-	# Note: this isn't perfect, because any error output goes to the
-	# terminal instead of the console log.
-	# But if you use open instead, you will need to fully qualify the
-	# path names for any filenames you specify, which is hard.
-	exec "$binary" -g $opts ${1:+"$@"}
+  # Note: this isn't perfect, because any error output goes to the
+  # terminal instead of the console log.
+  # But if you use open instead, you will need to fully qualify the
+  # path names for any filenames you specify, which is hard.
+
+  # Handle stdin
+  if $stdin; then
+    exec "$binary" -g $opts -
+  elif $diffmode; then
+    exec "$binary" -f -g -d $opts $*
+  elif $tabs && [[ `$binary --serverlist` = "VIM" ]]; then
+    #make macvim open stuff in the same window instead of new ones
+    exec "$binary" -g $opts --remote-tab-silent ${1:+"$@"} & 
+    wait
+  else
+    exec "$binary" -g $opts ${1:+"$@"}
+  fi
 else
-	exec "$binary" $opts ${1:+"$@"}
+  exec "$binary" $opts ${1:+"$@"}
 fi

@@ -10,10 +10,15 @@ UTILS = %w[
   crashplan-pause
   crashplan-resume
   ~/source/cronic/cronic
+  ~/code/cronify/cronify
   diskmonitor/diskmonitor.rb
   gdrive-pause
   gdrive-resume
   git-changelog
+  gvim
+  mvim
+  gvimdiff
+  mvimdiff
   notify
   pivotal-lookup
   rot13
