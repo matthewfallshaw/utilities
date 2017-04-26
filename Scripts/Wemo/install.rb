@@ -24,7 +24,7 @@ switches.each do |switch|
 #!/bin/bash
 WEMOSWITCH="#{switch}"
 SWITCHSTATE=#{state}
-/usr/local/bin/wemo switch "$WEMOSWITCH" $SWITCHSTATE || /usr/local/bin/wemo clear > /dev/null && /usr/local/bin/wemo switch "$WEMOSWITCH" $SWITCHSTATE
+/usr/local/bin/wemo switch "$WEMOSWITCH" $SWITCHSTATE || /usr/local/bin/wemo clear > /dev/null && /usr/local/bin/wemo switch "$WEMOSWITCH" $SWITCHSTATE &
 END
     end
   end
