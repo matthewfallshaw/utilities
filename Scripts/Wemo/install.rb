@@ -5,7 +5,7 @@ require 'fileutils'
 ROOMS = ["Office", "Alex"]
 
 # Remove old scripts
-Dir["Wemo*{On,Off}"].each {|f| File.delete(f) }
+Dir["wemo*{On,Off}"].each {|f| File.delete(f) }
 
 # Add any new switches to switches.txt
 #  (we do this because switches sometimes temporarily fall off the network;
@@ -20,13 +20,13 @@ switches = File.readlines("switches.txt").collect(&:chomp)
 # Create switch scripts
 switches.each do |switch|
   ["On", "Off"].each do |state|
-    File.open("Wemo#{switch.gsub(/ /,'')}#{state}", "w") do |f|
+    File.open("wemo#{switch.gsub(/ /,'')}#{state}", "w") do |f|
       STDOUT.puts f.path
       f.puts <<END
 #!/bin/bash
 WEMOSWITCH="#{switch}"
 SWITCHSTATE=#{state}
-/usr/local/bin/wemo switch "$WEMOSWITCH" $SWITCHSTATE || /usr/local/bin/wemo clear > /dev/null && /usr/local/bin/wemo switch "$WEMOSWITCH" $SWITCHSTATE &
+(/usr/local/bin/wemo switch "$WEMOSWITCH" $SWITCHSTATE > /dev/null) || (/usr/local/bin/wemo clear > /dev/null) && (/usr/local/bin/wemo switch "$WEMOSWITCH" $SWITCHSTATE) &
 END
     end
   end
