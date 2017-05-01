@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'fileutils'
+
 ROOMS = ["Office", "Alex"]
 
 # Remove old scripts
@@ -33,7 +35,7 @@ end
 # Create room scripts
 ROOMS.each do |room|
   ["On", "Off"].each do |state|
-    File.open("Wemo#{room}#{state}", "w") do |f|
+    File.open("wemo#{room}#{state}", "w") do |f|
       f.puts "#!/bin/sh"
       switches.select {|s| s[/^#{room}/] }.each do |switch|
         f.puts "/usr/local/bin/wemo switch \"#{switch}\" #{state} &> /dev/null"
@@ -43,5 +45,13 @@ ROOMS.each do |room|
   end
 end
 
-# Make scripts executable
-Dir["Wemo*{On,Off}"].each {|f| File.chmod(0775, f) } # user, group: rwx, other: rx
+# Make scripts executable and link to ~/bin
+Dir["wemo*{On,Off}"].each do |f|
+  File.chmod(0775, f) # user, group: rwx, other: rx
+
+  binfile = File.join(File.expand_path("~/bin/"), f)
+  FileUtils.rm binfile if File.exist?(binfile) || File.symlink?(binfile)
+  FileUtils.ln_s(File.expand_path(f), binfile)
+end
+
+

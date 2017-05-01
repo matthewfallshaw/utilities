@@ -4,27 +4,12 @@ BINDIR = File.expand_path("~/bin")
 SOURCEDIR = File.expand_path(File.dirname(__FILE__))
 SECRETS = File.expand_path('~/.dotfiles_secrets')
 
-UTILS = %w[
+UTILS = Dir["shell/*"] + %w[
   audiobook-merge/audiobook-merge.rb
-  clear-dropbox-conflicted-files
-  crashplan-pause
-  crashplan-resume
   ~/source/cronic/cronic
   ~/code/cronify/cronify
   diskmonitor/diskmonitor.rb
-  gdrive-pause
-  gdrive-resume
-  git-changelog
-  gvim
-  mvim
-  gvimdiff
-  mvimdiff
-  notify
-  pivotal-lookup
-  rot13
   ~/code/skype-pounce/skype_pounce.rb
-  textcleaner
-  wemos
 ]
 
 def secrets
@@ -60,6 +45,7 @@ UTILS.each do |script|
   file binfile => scriptfile do
     puts "## #{script}"
     mkdir_p BINDIR
+    rm binfile if File.exist?(binfile) || File.symlink?(binfile)
     if secrets[scriptfile_base]
       cp scriptfile, binfile
       system %Q{chmod u+x "#{binfile}"}
