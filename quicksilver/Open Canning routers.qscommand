@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>command</key>
+	<dict>
+		<key>class</key>
+		<string>QSCommand</string>
+		<key>data</key>
+		<dict>
+			<key>qs.command</key>
+			<dict>
+				<key>actionID</key>
+				<string>URLOpenAction</string>
+				<key>directArchive</key>
+				<dict>
+					<key>class</key>
+					<string>QSObject</string>
+					<key>data</key>
+					<dict>
+						<key>Apple URL pasteboard type</key>
+						<array>
+							<string>http://192.168.42.1/</string>
+							<string>http://192.168.42.200/</string>
+							<string>http://192.168.42.201/</string>
+						</array>
+						<key>QSRemoteHostsType</key>
+						<array>
+							<string>192.168.42.1</string>
+							<string>192.168.42.200</string>
+							<string>192.168.42.201</string>
+						</array>
+						<key>public.utf8-plain-text</key>
+						<array>
+							<string>http://192.168.42.1/</string>
+							<string>http://192.168.42.200/</string>
+							<string>http://192.168.42.201/</string>
+						</array>
+					</dict>
+					<key>properties</key>
+					<dict>
+						<key>QSObjectName</key>
+						<string>Combined Objects</string>
+						<key>QSObjectType</key>
+						<string>Apple URL pasteboard type</string>
+					</dict>
+				</dict>
+			</dict>
+		</dict>
+		<key>properties</key>
+		<dict>
+			<key>QSObjectType</key>
+			<string>qs.command</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
