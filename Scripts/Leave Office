@@ -1,0 +1,4 @@
+#!/bin/sh
+
+source Eject\ External\ Drives.sh
+source Wemo/wemoOfficeOff
