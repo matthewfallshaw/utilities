@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/bin/osascript -e 'display alert (do shell script "/usr/local/bin/wemo status")' > /dev/null

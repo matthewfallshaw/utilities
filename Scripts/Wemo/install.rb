@@ -5,7 +5,7 @@ require 'fileutils'
 ROOMS = ["Office", "Alex"]
 
 # Remove old scripts
-Dir["wemo*{On,Off}"].each {|f| File.delete(f) }
+(Dir["wemo*{On,Off}"] + %w[wemoStatus]).each {|f| File.delete(f) }
 
 # Add any new switches to switches.txt
 #  (we do this because switches sometimes temporarily fall off the network;
@@ -23,7 +23,7 @@ switches.each do |switch|
     File.open("wemo#{switch.gsub(/ /,'')}#{state}", "w") do |f|
       STDOUT.puts f.path
       f.puts <<END
-#!/bin/bash
+#!/bin/sh
 WEMOSWITCH="#{switch}"
 SWITCHSTATE=#{state}
 (/usr/local/bin/wemo switch "$WEMOSWITCH" $SWITCHSTATE > /dev/null) || (/usr/local/bin/wemo clear > /dev/null) && (/usr/local/bin/wemo switch "$WEMOSWITCH" $SWITCHSTATE) &
@@ -45,13 +45,18 @@ ROOMS.each do |room|
   end
 end
 
+# Create wemoStatus script
+File.open("wemoStatus", "w") do |f|
+  f.puts "#!/bin/sh"
+  f.puts "/usr/bin/osascript -e 'display alert (do shell script \"/usr/local/bin/wemo status\")' > /dev/null"
+  STDOUT.puts f.path
+end
+
 # Make scripts executable and link to ~/bin
-Dir["wemo*{On,Off}"].each do |f|
+(Dir["wemo*{On,Off}"] + %w[wemoStatus]).each do |f|
   File.chmod(0775, f) # user, group: rwx, other: rx
 
   binfile = File.join(File.expand_path("~/bin/"), f)
   FileUtils.rm binfile if File.exist?(binfile) || File.symlink?(binfile)
   FileUtils.ln_s(File.expand_path(f), binfile)
 end
-
-
