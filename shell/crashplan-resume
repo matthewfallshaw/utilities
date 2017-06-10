@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo /bin/launchctl load /Library/LaunchDaemons/com.crashplan.engine.plist
+open -a "CrashPlan menu bar"
 
 # Add to /etc/sudoers.d/60_crashplan_launchdaemon
 #   %admin ALL=NOPASSWD: /bin/launchctl load /Library/LaunchDaemons/com.crashplan.engine.plist
