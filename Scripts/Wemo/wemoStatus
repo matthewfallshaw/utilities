@@ -1,2 +1,2 @@
 #!/bin/sh
-/usr/bin/osascript -e 'display alert (do shell script "/usr/local/bin/wemo status")' > /dev/null
+/usr/bin/osascript -e "display alert \"wemo Status\" message (do shell script \"/usr/local/bin/wemo status | column -ts $'	'\") giving up after 5" > /dev/null

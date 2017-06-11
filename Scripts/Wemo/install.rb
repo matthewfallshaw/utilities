@@ -48,7 +48,7 @@ end
 # Create wemoStatus script
 File.open("wemoStatus", "w") do |f|
   f.puts "#!/bin/sh"
-  f.puts "/usr/bin/osascript -e 'display alert (do shell script \"/usr/local/bin/wemo status\")' > /dev/null"
+  f.puts "/usr/bin/osascript -e \"display alert \\\"wemo Status\\\" message (do shell script \\\"/usr/local/bin/wemo status | column -ts $'\t'\\\") giving up after 5\" > /dev/null"
   STDOUT.puts f.path
 end
 
