@@ -10,7 +10,7 @@ UTILS = Dir["shell/*"] + %w[
   ~/code/cronify/cronify
   diskmonitor/diskmonitor.rb
   ~/code/skype-pounce/skype_pounce.rb
-]
+].select {|f| File.exist?(f) }
 
 def secrets
   @secrets ||= begin
