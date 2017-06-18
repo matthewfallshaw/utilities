@@ -1,3 +1,11 @@
 #!/bin/sh
 
-{ source "${BASH_SOURCE%/*}/Wemo/wemoOfficeOff" && /usr/bin/osascript -e "tell application \"Finder\" to eject (every disk whose ejectable is true)" && /usr/bin/pmset sleepnow; } >/tmp/leaveoffice.log 2>&1
+
+:>/tmp/leaveoffice.log
+wemo=[[ $(/usr/local/bin/hs -c 'controlplane.cachedLocation') == "Canning" ]]
+if $wemo
+then
+  notify Turning off Wemo switches
+  source "${BASH_SOURCE%/*}/Wemo/wemoOfficeOff" >>/tmp/leaveoffice.log 2>&1
+fi
+{ /usr/bin/osascript -e "tell application \"Finder\" to eject (every disk whose ejectable is true)" && /usr/bin/pmset sleepnow; } >>/tmp/leaveoffice.log 2>&1
