@@ -5,7 +5,7 @@ require 'fileutils'
 ROOMS = ["Office", "Alex"]
 
 # Remove old scripts
-(Dir["wemo*{On,Off}"] + %w[wemoStatus]).each {|f| File.delete(f) }
+(Dir["wemo*{On,Off}"] + %w[wemoStatus]).each {|f| File.delete(f) if File.exist?(f) }
 
 # Add any new switches to switches.txt
 #  (we do this because switches sometimes temporarily fall off the network;
