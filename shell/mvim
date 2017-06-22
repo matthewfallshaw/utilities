@@ -53,6 +53,7 @@ gui=
 opts=
 stdin=false
 diffmode=false
+reuseexisting=true
 
 # GUI mode, implies forking
 case "$name" in m*|g*|rm*|rg*) gui=true ;; esac
@@ -78,13 +79,16 @@ case "$name" in
 		;;
 esac
 
+# mvim implies reuse window, gvim implies do not
+case "$name" in g*) reuseexisting=false;; esac
+
 # Preserve command line options lazily
 while [ -n "$1" ]; do
     case $1 in 
         -d) diffmode=true; shift;;
         -?*) opts="$opts $1"; shift;;
         -) stdin=true; break;;
-        *) echo "*"; break;; 
+        *) break;; 
     esac
 done
 
@@ -103,7 +107,7 @@ if [ "$gui" ]; then
     exec "$binary" -g $opts -
   elif $diffmode; then
     exec "$binary" -f -g -d $opts $*
-  elif $tabs && [[ `$binary --serverlist` = "VIM" ]]; then
+  elif $reuseexisting && [[ `$binary --serverlist` = "VIM" ]]; then
     #make macvim open stuff in the same window instead of new ones
     exec "$binary" -g $opts --remote-tab-silent ${1:+"$@"} & 
     wait
