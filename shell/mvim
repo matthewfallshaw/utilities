@@ -107,7 +107,7 @@ if [ "$gui" ]; then
     exec "$binary" -g $opts -
   elif $diffmode; then
     exec "$binary" -f -g -d $opts $*
-  elif $reuseexisting && [[ `$binary --serverlist` = "VIM" ]]; then
+  elif $reuseexisting; then
     #make macvim open stuff in the same window instead of new ones
     exec "$binary" -g $opts --remote-tab-silent ${1:+"$@"} & 
     wait
