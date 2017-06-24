@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/bin/open -a "Google Calendar" https://calendar.google.com/calendar/b/2/render
