@@ -1,11 +1,20 @@
 #!/bin/sh
 
-
+# Empty log & redirect output
 :>/tmp/leaveoffice.log
-wemo=[[ $(/usr/local/bin/hs -c 'controlplane.cachedLocation') == "Canning" ]]
-if $wemo
-then
-  notify Turning off Wemo switches
-  source "${BASH_SOURCE%/*}/Wemo/wemoOfficeOff" >>/tmp/leaveoffice.log 2>&1
-fi
-{ /usr/bin/osascript -e "tell application \"Finder\" to eject (every disk whose ejectable is true)" && /usr/bin/pmset sleepnow; } >>/tmp/leaveoffice.log 2>&1
+
+{
+  # If we're at Canning, turn off Wemo switches
+  [ $(/usr/local/bin/hs -c 'controlplane.cachedLocation') == "Canning" ]
+  wemo=$?
+  if (( wemo == 0 )); then
+    ~/bin/notify "Turning off Wemo switches"
+    source "${BASH_SOURCE%/*}/Wemo/wemoOfficeOff"
+  fi
+
+  # Eject ejectable drives
+  ~/bin/notify Ejecting ejectable drives
+  /usr/bin/osascript -e "tell application \"Finder\" to eject (every disk whose ejectable is true)"
+  ~/bin/notify "Ejectable drives ejected, sleeping"
+  /usr/bin/pmset sleepnow
+} 2>&1 | tee -a /tmp/leaveoffice.log
