@@ -1,0 +1,12 @@
+#!/bin/bash
+
+case "$1" in
+  Fitzroy)
+    profile="profile=%7B%22status_text%22:%22Fitzroy%22,%22status_emoji%22:%22:briefcase:%22%7D"
+    ;;
+  *)
+    profile="profile=%7B%22status_text%22:%22%22,%22status_emoji%22:%22%22%7D"
+    ;;
+esac
+
+curl --data "" "https://slack.com/api/users.profile.set?token=slack_token&$profile"
