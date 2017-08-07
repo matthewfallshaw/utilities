@@ -7,5 +7,5 @@ for v in $(diskutil corestorage list | grep Logical\ Volume | grep -v "Family" |
       security find-generic-password -wa Files | diskutil coreStorage unlockLV "$v" -stdinpassphrase
     fi
     diskutil mount "$v"
-  } >>/tmp/mountdrives.log &2>1
+  } >>/tmp/mountdrives.log 2>&1
 done
