@@ -12,9 +12,19 @@
     source "${BASH_SOURCE%/*}/Wemo/wemoOfficeOff"
   fi
 
+  # If we're at Fitzroy, change Slack status
+  [ $(/usr/local/bin/hs -c 'controlplane.cachedLocation') == "Fitzroy" ]
+  slackstatus=$?
+  if (( slackstatus == 0 )); then
+    ~/bin/notify "Clearing Slack status"
+    source "${BASH_SOURCE%/*}/../shell/slack-status"
+  fi
+
   # Eject ejectable drives
   ~/bin/notify Ejecting ejectable drives
   /usr/bin/osascript -e "tell application \"Finder\" to eject (every disk whose ejectable is true)"
+
+  # Sleep
   ~/bin/notify "Ejectable drives ejected, sleeping"
   /usr/bin/pmset sleepnow
 } 2>&1 | tee -a /tmp/leaveoffice.log
