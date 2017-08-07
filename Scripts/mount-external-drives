@@ -3,6 +3,9 @@
 :>/tmp/mountdrives.log
 for v in $(diskutil corestorage list | grep Logical\ Volume | grep -v "Family" | grep -v Group | grep -v 470C-A323-D4F7F31BDD60 | cut -c 5- | awk '{ print $4 }'); do
   {
-    security find-generic-password -wa Files | diskutil coreStorage unlockLV "$v" -stdinpassphrase && diskutil mount "$v"
+    if diskutil corestorage list "$v" | grep -q "Status.*Locked"; then
+      security find-generic-password -wa Files | diskutil coreStorage unlockLV "$v" -stdinpassphrase
+    fi
+    diskutil mount "$v"
   } >>/tmp/mountdrives.log &2>1
 done
