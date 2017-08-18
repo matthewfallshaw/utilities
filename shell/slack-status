@@ -9,4 +9,4 @@ case "$1" in
     ;;
 esac
 
-curl --data "" "https://slack.com/api/users.profile.set?token=slack_token&$profile"
+curl -s -S --data "" "https://slack.com/api/users.profile.set?token=slack_token&$profile"
