@@ -9,7 +9,7 @@
   wemo=$?
   if (( wemo == 0 )); then
     ~/bin/notify "Turning off Wemo switches"
-    source "${BASH_SOURCE%/*}/Wemo/wemoOfficeOff"
+    source "$HOME/bin/wemoOfficeOff"
   fi
 
   # If we're at Fitzroy, change Slack status
@@ -17,7 +17,7 @@
   slackstatus=$?
   if (( slackstatus == 0 )); then
     ~/bin/notify "Clearing Slack status"
-    source "${BASH_SOURCE%/*}/../shell/slack-status"
+    source "$HOME/bin/slack-status"
   fi
 
   # Eject ejectable drives
