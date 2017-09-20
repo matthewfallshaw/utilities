@@ -1,0 +1,7 @@
+#!/bin/bash
+
+{
+  filetodelete=$(/usr/local/opt/coreutils/libexec/gnubin/stat -c %w\|%N ~/Downloads/* | sort -r | head -1 | cut -d'|' -f 2)
+  echo $filetodelete | xargs /usr/local/bin/trash
+  ~/bin/notify $filetodelete moved to Trash
+} &> /tmp/trash-most-recent.log
