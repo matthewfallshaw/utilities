@@ -5,7 +5,7 @@
 
 {
   # If we're at Canning, turn off Wemo switches
-  [ $(/usr/local/bin/hs -c 'controlplane.cachedLocation') == "Canning" ]
+  [ $(/usr/local/bin/hs -c 'control_plane.cachedLocation') == "Canning" ]
   wemo=$?
   if (( wemo == 0 )); then
     ~/bin/notify "Turning off Wemo switches"
@@ -13,7 +13,7 @@
   fi
 
   # If we're at Fitzroy, change Slack status
-  [ $(/usr/local/bin/hs -c 'controlplane.cachedLocation') == "Fitzroy" ]
+  [ $(/usr/local/bin/hs -c 'control_plane.cachedLocation') == "Fitzroy" ]
   slackstatus=$?
   if (( slackstatus == 0 )); then
     ~/bin/notify "Clearing Slack status"
