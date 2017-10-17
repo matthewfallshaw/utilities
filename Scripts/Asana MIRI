@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/bin/open -a "Asana" https://app.asana.com/0/276583976824390/list
