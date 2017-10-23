@@ -1,0 +1,6 @@
+#!/bin/bash
+
+{
+  filestodelete=$(/usr/local/opt/coreutils/libexec/gnubin/stat -c %w\|%N ~/Dropbox/Library/Application\ Support/Übersicht/.Sparkle/* | sort | head -n -1 | cut -d'|' -f 2)
+  echo $filestodelete | xargs /usr/local/bin/trash
+} &> /tmp/trash-dup-sparkles.log
