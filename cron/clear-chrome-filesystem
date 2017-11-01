@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Clear Dropbox cache if it's too large
-GRRDIR="Dropbox (Bellroy)/.dropbox.cache"
-GRRLIMIT=5  # GB
-
+# Clear Chrome File System if it's too large
+GRRDIR="Library/Application Support/Google/Chrome/Default/File System"
+GRRLIMIT=3  # GB
 SIZE=$(du -sm ~/"$GRRDIR" 2>/dev/null | cut -f1)
+
 LOG=/var/log/grr.dirs.log
 
 if [ $SIZE -gt ${GRRLIMIT}000 ]; then
