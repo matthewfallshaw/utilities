@@ -1,0 +1,4 @@
+#!/bin/sh
+
+/usr/local/bin/hs -c "app_tabs._updateSafariTabs()"
+open -a "Quicksilver" ~/code/utilities/quicksilver/"_Show contents for Open Web Pages (Safari).qscommand"
