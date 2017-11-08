@@ -1,3 +1,3 @@
 #!/bin/sh
 
-osascript "/Users/matt/code/utilities/Scripts/Eject External Drives.scpt" &>/dev/null &
+diskutil eject $(diskutil list | grep 'external, physical' | cut -d' ' -f1)

@@ -22,7 +22,8 @@
 
   # Eject ejectable drives
   ~/bin/notify Ejecting ejectable drives
-  /usr/bin/osascript -e "tell application \"Finder\" to eject (every disk whose ejectable is true)"
+  BASEDIR=$(dirname "$0")
+  source $BASEDIR"Eject External Drives.sh"
 
   # Sleep
   ~/bin/notify "Ejectable drives ejected, sleeping"
