@@ -3,9 +3,9 @@
 # Clear Chrome File System if it's too large
 GRRDIR="Library/Application Support/Google/Chrome/Default/File System"
 GRRLIMIT=3  # GB
-SIZE=$(du -sm ~/"$GRRDIR" 2>/dev/null | cut -f1)
 
-LOG=/var/log/grr.dirs.log
+SIZE=$(du -sm ~/"$GRRDIR" 2>/dev/null | cut -f1)
+LOG=/tmp/grr.dirs.log
 
 if [ $SIZE -gt ${GRRLIMIT}000 ]; then
   rm -rf ~/"$GRRDIR"/*

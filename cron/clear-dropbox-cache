@@ -5,7 +5,7 @@ GRRDIR="Dropbox (Bellroy)/.dropbox.cache"
 GRRLIMIT=5  # GB
 
 SIZE=$(du -sm ~/"$GRRDIR" 2>/dev/null | cut -f1)
-LOG=/var/log/grr.dirs.log
+LOG=/tmp/grr.dirs.log
 
 if [ $SIZE -gt ${GRRLIMIT}000 ]; then
   rm -rf ~/"$GRRDIR"/*
