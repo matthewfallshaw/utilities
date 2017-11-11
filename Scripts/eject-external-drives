@@ -1,0 +1,7 @@
+#!/bin/bash
+
+{
+  for i in $(diskutil list | grep 'external, virtual' | cut -d' ' -f1); do
+    diskutil info $i | grep -q 'Mounted.*Yes' && echo && date "+%Y-%m-%dT%H:%M:%S%z" && diskutil eject $i
+  done
+} >>/tmp/mountdrives.log 2>&1
