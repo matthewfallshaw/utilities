@@ -3,7 +3,7 @@ require 'yaml'
 
 cals = YAML.load(File.open(File.expand_path("~/.dotfiles_secrets")))["calendars"].collect {|c| c.first }
 
-Dir.chdir("/Users/matt/Dropbox/Archive/calendars")
+Dir.chdir(File.expand_path("~/GDrive Personal/archive/calendars/"))
 
 def weekday?
   not %w[Sat Sun].include?(Time.now.strftime("%a"))
