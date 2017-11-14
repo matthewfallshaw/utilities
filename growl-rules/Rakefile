@@ -1,0 +1,21 @@
+%w[rubygems rake].each {|l| require l }
+ 
+task :default => :install_actions
+
+desc "Install Growl Applescript Rules to ~/Library/Application Scripts/com.Growl.GrowlHelperApp/"
+task :install_actions
+
+Dir["*.scpt"].each do |action|
+  actiondir = File.expand_path("~/Library/Application Scripts/com.Growl.GrowlHelperApp/")
+  actionfile = File.join(actiondir, action)
+  file actionfile => action do
+    mkdir_p actiondir
+    cp action, actiondir
+  end
+  task install_actions: actionfile
+
+  desc "file #{actionfile} => #{action}"
+  task File.basename(action, ".*") => actionfile
+end
+
+
