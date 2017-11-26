@@ -4,8 +4,11 @@ using terms from application "Quicksilver"
 	end get direct types
 	on open files _items_
 		try
-			tell application "Hammerspoon"
-				set bundleID to do shell script "/usr/local/bin/hs -c \"u.applicationBundleID('" & _items_ & "')\""
+			set appName to text 1 through -2 of ((item 1 of _items_) as text)
+			tell application appName
+				set bundleID to id
+				set the clipboard to bundleID
+				display notification bundleID
 			end tell
 		on error a number b
 			display notification ("Quicksilver App BundleID script")
