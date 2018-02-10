@@ -6,11 +6,10 @@ SECRETS = File.expand_path('~/.dotfiles_secrets')
 
 UTILS = Dir["shell/*"] + %w[
   audiobook-merge/audiobook-merge.rb
-  ~/source/cronic/cronic
-  ~/code/cronify/cronify
   diskmonitor/diskmonitor.rb
-  ~/code/skype-pounce/skype_pounce.rb
-].select {|f| File.exist?(f) }
+  ~/code/cronic/cronic
+  ~/code/cronify/cronify
+].select {|f| File.exist?(File.expand_path(f)) }
 
 def secrets
   @secrets ||= begin
