@@ -10,7 +10,7 @@ ROOMS = ["Office", "Alex"]
 # Add any new switches to switches.txt
 #  (we do this because switches sometimes temporarily fall off the network;
 #   manually edit switches.txt to remove a switch you no longer have)
-currently_detectable_switches = `wemo list`.split(/\n/).collect {|s| s[/Switch: (.*)/,1]}
+currently_detectable_switches = `wemo list`.split(/\n/).collect {|s| s[/Switch:[', ]*(.*?)[', )]*$/,1]}
 File.open("switches.txt", "a") { |f| currently_detectable_switches.each { |switch| f.puts switch } }
 system("sort -u switches.txt -o switches.txt")
 
@@ -32,15 +32,17 @@ END
   end
 end
 
-# Create room scripts
+# Create room & room light scripts
 ROOMS.each do |room|
   ["On", "Off"].each do |state|
-    File.open("wemo#{room}#{state}", "w") do |f|
-      f.puts "#!/bin/sh"
-      switches.select {|s| s[/^#{room}/] }.each do |switch|
-        f.puts "/usr/local/bin/wemo switch \"#{switch}\" #{state} &> /dev/null"
+    ["Light", ""].each do |room_type|
+      File.open("wemo#{room}#{room_type}#{state}", "w") do |f|
+        f.puts "#!/bin/sh"
+        switches.select {|s| s[/^#{room}#{room_type.empty? ? "" : " #{ room_type}"}/i] }.each do |switch|
+          f.puts "/usr/local/bin/wemo switch \"#{switch}\" #{state} &> /dev/null"
+        end
+        STDOUT.puts f.path
       end
-      STDOUT.puts f.path
     end
   end
 end
