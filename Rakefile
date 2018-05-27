@@ -1,4 +1,4 @@
-%w[rubygems rake yaml].each {|l| require l }
+%w[rubygems rake yaml shellwords].each {|l| require l }
  
 BINDIR = File.expand_path("~/bin")
 SOURCEDIR = File.expand_path(File.dirname(__FILE__))
