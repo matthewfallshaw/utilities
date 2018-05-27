@@ -9,4 +9,8 @@ case "$1" in
     ;;
 esac
 
-curl -s -S --data "" "https://slack.com/api/users.profile.set?token=slack_token&$profile"
+# replace slack_token with your token from
+# https://api.slack.com/custom-integrations/legacy-tokens  
+# Note that the Slack team don't like these tokens 'cos people do crazy things
+# like post them to Github. Don't be one of those people.
+curl -s -S --data "" "https://slack.com/api/users.profile.set?token=slack_token&$profile" | grep '"ok":true'
