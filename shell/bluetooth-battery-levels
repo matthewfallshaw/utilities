@@ -1,0 +1,2 @@
+#!/bin/sh
+ioreg -r -l -k "BatteryPercent" | sed -n '/"Product" =/{s/.*"Product" = "\(.*\)"/\1: /;h;};/"BatteryPercent" =/{s/.*"BatteryPercent" = \([0-9]*\)/\1%/;x;G;s/\n//;p;}'
