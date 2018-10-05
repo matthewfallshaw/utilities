@@ -1,3 +1,0 @@
-[submodule "Scripts/Make-symlink.app"]
-	path = Scripts/Make-symlink.app
-	url = git@github.com:matthewfallshaw/Make-symlink.app.git
