@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ps -p $(ioreg -l -w 0 | ggrep -m1 -P '(?<=kCGSSessionSecureInputPID\"=)\d+' -o)
