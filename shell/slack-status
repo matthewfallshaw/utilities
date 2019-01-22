@@ -1,16 +1,30 @@
 #!/bin/bash
 
-case "$1" in
-  Fitzroy)
-    profile="profile=%7B%22status_text%22:%22Fitzroy%22,%22status_emoji%22:%22:briefcase:%22%7D"
-    ;;
-  *)
-    profile="profile=%7B%22status_text%22:%22%22,%22status_emoji%22:%22%22%7D"
-    ;;
-esac
-
-# replace slack_token with your token from
+# replace tokens with your tokens from
 # https://api.slack.com/custom-integrations/legacy-tokens  
 # Note that the Slack team don't like these tokens 'cos people do crazy things
 # like post them to Github. Don't be one of those people.
-curl -s -S --data "" "https://slack.com/api/users.profile.set?token=slack_token&$profile" | grep '"ok":true'
+bellroy_token="bellroy_slack_token"
+miri_token="miri_slack_token"
+
+function post_slack_status () {
+  curl -s -S --data "" "https://slack.com/api/users.profile.set?token=$1&$2" | grep '"ok":true'
+}
+
+case "$1" in
+  Fitzroy)
+    slack_token=$bellroy_token
+    profile="profile=%7B%22status_text%22:%22Fitzroy%22,%22status_emoji%22:%22:briefcase:%22%7D"
+    post_slack_status $slack_token $profile
+    ;;
+  MIRI)
+    slack_token=$miri_token
+    profile="profile=%7B%22status_text%22%3A%22MIRI%22,%22status_emoji%22%3A%22%3Amiri%3A%22%7D"
+    post_slack_status $slack_token $profile
+    ;;
+  *)
+    profile="profile=%7B%22status_text%22:%22%22,%22status_emoji%22:%22%22%7D"
+    post_slack_status $bellroy_token $profile
+    post_slack_status $miri_token $profile
+    ;;
+esac
