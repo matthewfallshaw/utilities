@@ -4,8 +4,8 @@
 # https://api.slack.com/custom-integrations/legacy-tokens  
 # Note that the Slack team don't like these tokens 'cos people do crazy things
 # like post them to Github. Don't be one of those people.
-bellroy_token="bellroy_slack_token"
-miri_token="miri_slack_token"
+bellroy_token=`security find-generic-password -a utilities -s BellroySlackToken -w`
+miri_token=`security find-generic-password -a utilities -s MIRISlackToken -w`
 
 function post_slack_status () {
   curl -s -S --data "" "https://slack.com/api/users.profile.set?token=$1&$2" | grep '"ok":true'
