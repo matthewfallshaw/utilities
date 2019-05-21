@@ -1,4 +1,0 @@
-#!/bin/sh
-killall Quicksilver
-open /Applications/Quicksilver.app
-# vi: filetype=sh
