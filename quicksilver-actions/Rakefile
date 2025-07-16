@@ -1,6 +1,7 @@
 %w[rubygems rake].each {|l| require l }
  
 task :default => :install_actions
+task :default => :other_actions
 
 desc "Install Applescript actions to ~/Library/Application\ Support/Quicksilver/Actions/"
 task :install_actions
@@ -18,3 +19,6 @@ Dir["*.scpt"].each do |action|
   task File.basename(action, ".*") => actionfile
 end
 
+task :other_actions do
+  puts "Now run `rake` in growl-rules, and quicksilver-actions"
+end

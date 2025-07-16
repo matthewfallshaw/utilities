@@ -1,3 +1,4 @@
+#@osa-lang:AppleScript
 using terms from application "Quicksilver"
 	on get direct types
 		return {"NSFilenamesPboardType"}

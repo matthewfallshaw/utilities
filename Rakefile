@@ -1,38 +1,44 @@
-%w[rubygems rake yaml shellwords].each {|l| require l }
- 
-BINDIR = File.expand_path("~/bin")
-SOURCEDIR = File.expand_path(File.dirname(__FILE__))
+# frozen_string_literal: true
+
+%w[rubygems rake yaml shellwords].each { |l| require l }
+
+BINDIR = File.expand_path('~/bin')
+SOURCEDIR = __dir__
 SECRETS = File.expand_path('~/.dotfiles_secrets')
 
-UTILS = Dir["shell/*"] + %w[
+UTILS = Dir['shell/*'] + %w[
   audiobook-merge/audiobook-merge.rb
   diskmonitor/diskmonitor.rb
   ~/code/cronic/cronic
   ~/code/cronify/cronify
-].select {|f| File.exist?(File.expand_path(f)) }
+  ~/source/bash-ninja/gchrome
+].select { |f| File.exist?(File.expand_path(f)) }
 
 def secrets
   @secrets ||= begin
                  path = File.expand_path('~/.dotfiles_secrets')
                  if File.exist?(path)
-                   YAML.load(open(path))
+                   YAML.safe_load(open(path))
                  else
                    {}
                  end
                end
 end
 
-task :default => :install
+task default: :install
 
 desc "Install utility scripts to #{BINDIR}
   secrets in ~/.dotfiles_secrets like
   filename:
     'search_term': replace_term
     'other_search_term': other_replace_term"
-task :install
+task :install do
+  # TODO
+  # ensure that Scripts / Services are linked appropriately
+end
 
 UTILS.each do |script|
-  scriptfile_base = File.basename(script, ".*")
+  scriptfile_base = File.basename(script, '.*')
   scriptfile = File.expand_path(script)
   binfile = File.join(BINDIR, scriptfile_base)
 
@@ -47,14 +53,14 @@ UTILS.each do |script|
     rm binfile if File.exist?(binfile) || File.symlink?(binfile)
     if secrets[scriptfile_base]
       cp scriptfile, binfile
-      system %Q{chmod u+x "#{binfile}"}
+      system %(chmod u+x "#{binfile}")
       secrets[scriptfile_base].each do |search_term, replace_term|
         system %[ruby -pi -e 'gsub(/#{Shellwords.escape(search_term)}/, "#{Shellwords.escape(replace_term)}")' "#{binfile}"]
       end
       puts "… and secrets replaced in #{script}"
     else
       ln_s scriptfile, binfile
-      system %Q{chmod u+x "#{scriptfile}"}
+      system %(chmod u+x "#{scriptfile}")
     end
     puts
   end

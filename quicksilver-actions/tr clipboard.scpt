@@ -1,3 +1,4 @@
+#@osa-lang:AppleScript
 using terms from application "Quicksilver"
 	on process text theText
 		try
@@ -10,4 +11,3 @@ using terms from application "Quicksilver"
 		end try
 	end process text
 end using terms from
-

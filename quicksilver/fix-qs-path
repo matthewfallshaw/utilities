@@ -1,0 +1,3 @@
+#!/bin/bash
+source ~/.profile
+defaults write ~/Library/Application\ Support/Quicksilver/PlugIns/se.stdin.quicksilver.iTerm2.15.qsplugin/Contents/Info.plist LSEnvironment -array "{PATH=$PATH;}"

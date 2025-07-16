@@ -1,6 +1,0 @@
-#!/bin/bash
-sudo /bin/launchctl unload /Library/LaunchDaemons/com.crashplan.engine.plist
-
-# Add to /etc/sudoers.d/60_crashplan_launchdaemon
-#   %admin ALL=NOPASSWD: /bin/launchctl load /Library/LaunchDaemons/com.crashplan.engine.plist
-#   %admin ALL=NOPASSWD: /bin/launchctl unload /Library/LaunchDaemons/com.crashplan.engine.plist

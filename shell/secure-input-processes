@@ -1,3 +1,4 @@
 #!/bin/bash
 
-ps -p $(ioreg -l -w 0 | ggrep -m1 -P '(?<=kCGSSessionSecureInputPID\"=)\d+' -o)
+# TODO: if nothing found fail cleanly & quickly
+ps -p $(ioreg -l -w 0 | rg -m1 -P '(?<=kCGSSessionSecureInputPID\"=)\d+' -o)

@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+
+# Exit on error, undefined variables, and pipe failures
+set -euo pipefail
+
+# Handle Ctrl+C gracefully
+trap 'echo -e "\nInterrupted" >&2; exit 130' INT
+
+usage() {
+    cat <<EOF
+Usage: $(basename "$0") [options] <file-pattern>...
+
+Concatenate files, each prefixed with a header showing its path.
+
+Options:
+    -h, --help              Show this help message
+    -s, --separator TEXT    Custom header separator (default: "===")
+    -n, --no-empty-line    Skip empty line after header
+    -r, --raw              Just prefix each file with its name
+    -q, --quiet            Suppress "no matches" warnings
+    -c, --color            Colorize headers
+
+Paths starting with - are treated as filenames. Use ./-name or /path/-name.
+EOF
+    exit "${1:-0}"
+}
+
+# Default values
+separator="==="
+add_empty_line=true
+raw_mode=false
+quiet=false
+color=false
+
+# Parse options
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)
+            usage
+            ;;
+        -s|--separator)
+            separator="$2"
+            shift 2
+            ;;
+        -n|--no-empty-line)
+            add_empty_line=false
+            shift
+            ;;
+        -r|--raw)
+            raw_mode=true
+            shift
+            ;;
+        -q|--quiet)
+            quiet=true
+            shift
+            ;;
+        -c|--color)
+            color=true
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -*)
+            echo "Error: Unknown option: $1" >&2
+            usage 1
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+# Check if we have any patterns
+if [[ $# -eq 0 ]]; then
+    echo "Error: No file patterns provided" >&2
+    usage 1
+fi
+
+# Color settings
+if $color; then
+    COLOR_HEADER='\033[1;36m'  # Bold cyan
+    COLOR_RESET='\033[0m'
+else
+    COLOR_HEADER=''
+    COLOR_RESET=''
+fi
+
+# Function to check if file is binary
+is_binary() {
+    local file="$1"
+    file --brief --mime-encoding "$file" | grep -qv "^us-ascii\|^utf-8"
+}
+
+# Function to print file with header
+print_file() {
+    local file="$1"
+    local display_name
+
+    # Handle absolute paths and cleanup relative paths
+    if [[ "$file" = /* ]]; then
+        display_name="$file"
+    else
+        display_name="${file#./}"
+    fi
+
+    if [[ ! -r "$file" ]]; then
+        echo "Error: Cannot read '$display_name'" >&2
+        return 1
+    fi
+
+    if is_binary "$file"; then
+        echo "Binary file '$display_name' matches" >&2
+        return 0
+    fi
+
+    if $raw_mode; then
+        printf "%s%s:%s" "$COLOR_HEADER" "$display_name" "$COLOR_RESET"
+    else
+        printf "%s%s %s %s%s" "$COLOR_HEADER" "$separator" "$display_name" "$separator" "$COLOR_RESET"
+    fi
+
+    if $add_empty_line; then
+        echo
+    fi
+
+    cat "$file"
+    echo
+}
+
+# Process each argument
+for pattern in "$@"; do
+    # Handle - as stdin
+    if [[ "$pattern" = "-" ]]; then
+        if $raw_mode; then
+            printf "%s(standard input):%s" "$COLOR_HEADER" "$COLOR_RESET"
+        else
+            printf "%s%s standard input %s%s" "$COLOR_HEADER" "$separator" "$separator" "$COLOR_RESET"
+        fi
+        if $add_empty_line; then
+            echo
+        fi
+        cat -
+        echo
+        continue
+    fi
+
+    # Handle literal filenames (including those starting with -)
+    if [[ -e "$pattern" || -e "./$pattern" ]]; then
+        if [[ -e "./$pattern" ]]; then
+            pattern="./$pattern"
+        fi
+        print_file "$pattern"
+        continue
+    fi
+
+    # Expand globs
+    matches=0
+    for file in $pattern; do
+        # Skip the literal pattern if no matches (bash returns the pattern itself)
+        [[ -e "$file" ]] || continue
+        print_file "$file"
+        ((matches++))
+    done
+
+    # Warning for no matches
+    if [[ $matches -eq 0 ]] && ! $quiet; then
+        echo "Warning: '$pattern' matched no files" >&2
+    fi
+done
