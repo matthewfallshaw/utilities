@@ -17,7 +17,6 @@ using terms from application "Quicksilver"
 	end process text
 
 	on get direct types
-		display notification "got direct types"
 		return {"public.text"}
 	end get direct types
 
